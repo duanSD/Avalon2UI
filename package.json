@@ -1,5 +1,5 @@
 {
-  "name": "y",
+  "name": "Avalon2UI",
   "version": "1.0.0",
   "description": "基于avalon2的组件库",
   "main": "index.js",
@@ -19,5 +19,11 @@
   "bugs": {
     "url": "https://github.com/duanSD/Avalon2UI/issues"
   },
-  "homepage": "https://github.com/duanSD/Avalon2UI#readme"
+  "homepage": "https://github.com/duanSD/Avalon2UI#readme",
+  "devDependencies": {
+    "css-loader": "^0.23.1",
+    "style-loader": "^0.13.1",
+    "webpack": "^1.13.1",
+    "webpack-dev-server": "^1.14.1"
+  }
 }
