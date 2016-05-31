@@ -4,6 +4,7 @@
   "description": "基于avalon2的组件库",
   "main": "index.js",
   "scripts": {
+    "start": "node dev-server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -21,8 +22,17 @@
   },
   "homepage": "https://github.com/duanSD/Avalon2UI#readme",
   "devDependencies": {
+    "avalon2": "^2.0.6",
     "css-loader": "^0.23.1",
+    "extract-text-webpack-plugin": "^1.0.1",
+    "file-loader": "^0.8.5",
+    "html-loader": "^0.4.3",
+    "html-webpack-plugin": "^2.19.0",
+    "jquery": "^2.2.4",
+    "less": "^2.7.1",
+    "less-loader": "^2.2.3",
     "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
     "webpack": "^1.13.1",
     "webpack-dev-server": "^1.14.1"
   }
