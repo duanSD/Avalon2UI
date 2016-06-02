@@ -9,16 +9,16 @@
     -->
 </head>
 <body ms-controller="test">
-	<div class="g-hd">{{@aaa}}</div>
+	<div class="g-hd" ms-text="@aaa"></div>
 	<div class="g-bd">
 		<input type="button" value="弹窗" class="btn">
 		<p class="img">
 			<img src="../images/4.png" alt="">
 		</p>
 	</div>
-	<div class="g-ft"></div>
+	<div class="g-ft" ms-text="@aaaaa"></div>
 	<!--
-        描述：body中同样无需单独引入JS文件，webpack会根据入口JS文件自动实现按需加载或者生成script标签，还可以生成对应的hash值
+        描述： body中同样无需单独引入JS文件，webpack会根据入口JS文件自动实现按需加载或者生成script标签，还可以生成对应的hash值
     -->
 </body>
 </html>
