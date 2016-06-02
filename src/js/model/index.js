@@ -4,6 +4,8 @@ require("../../css/common/global.css");
 require("../../css/common/grid.css");
 require("../../css/model/index.less");
 
+require("../commponents/button/index");
+
 
 avalon.define({
 	$id: "test",

@@ -23,7 +23,7 @@ var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 const debug = process.env.NODE_ENV !== 'production';
 
-var entries = getEntry('src/js/model/**/*.js', 'src/js/model/');
+var entries = getEntry('src/js/**/*.js', 'src/js/');
 var chunks = Object.keys(entries);
 
 var config={

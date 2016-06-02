@@ -109,6 +109,8 @@
 	__webpack_require__(9);
 	__webpack_require__(12);
 
+	__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../commponents/button\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
+
 
 	avalon.define({
 		$id: "test",
