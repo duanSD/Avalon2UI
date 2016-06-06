@@ -17,7 +17,10 @@
 /******/ 		if(parentJsonpFunction) parentJsonpFunction(chunkIds, moreModules);
 /******/ 		while(callbacks.length)
 /******/ 			callbacks.shift().call(null, __webpack_require__);
-
+/******/ 		if(moreModules[0]) {
+/******/ 			installedModules[0] = 0;
+/******/ 			return __webpack_require__(0);
+/******/ 		}
 /******/ 	};
 
 /******/ 	// The module cache
@@ -27,8 +30,7 @@
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		1:0,
-/******/ 		0:0
+/******/ 		2:0
 /******/ 	};
 
 /******/ 	// The require function
@@ -74,7 +76,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "js/" + chunkId + ".chunk.js?" + {"0":"5e873169adbfefefcb82"}[chunkId] + "";
+/******/ 			script.src = __webpack_require__.p + "js/" + chunkId + ".chunk.js?" + {"0":"57dea872b36389160fe3","1":"506d5f6e501247b9c74b"}[chunkId] + "";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -87,46 +89,28 @@
 
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "/dist/";
-
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/******/ ({
 
-	module.exports = __webpack_require__(1);
+/***/ 71:
+/***/ function(module, exports) {
 
-
-/***/ },
-/* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(avalon) {//引入css
-	__webpack_require__(3);
-	__webpack_require__(7);
-	__webpack_require__(9);
-	__webpack_require__(12);
-
-	__webpack_require__(!(function webpackMissingModule() { var e = new Error("Cannot find module \"../commponents/button\""); e.code = 'MODULE_NOT_FOUND'; throw e; }()));
-
-
-	avalon.define({
-		$id: "test",
-		aaa: "Hello Avalon11  22asawqs2323!",
-		aaaaa:"asdfasdfasdsasfsadfwe"
-	})
-
-	//增加事件
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
+	// removed by extract-text-webpack-plugin
 
 /***/ },
-/* 2 */
+
+/***/ 78:
+/***/ function(module, exports) {
+
+	// removed by extract-text-webpack-plugin
+
+/***/ },
+
+/***/ 80:
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(avalon) {/*! built in 2016-5-28:2 version 2.06 by 司徒正美 */
+	/*! built in 2016-5-29:1 version 2.06 by 司徒正美 */
 	(function webpackUniversalModuleDefinition(root, factory) {
 		if(true)
 			module.exports = factory();
@@ -3543,7 +3527,7 @@
 		var wrapDuplex = function(arr){
 		    return '(function(){ return ' +arr.join('\n')+'})();\n'
 		}
-		var rAt = /(^|[^\w\u00c0-\uFFFF_])(@|##)(?=\w)/g
+		var rAt = /(^|[^\w\u00c0-\uFFFF_])(@|##)(?=[$\w])/g
 		var rhandleName = /^(?:\@|##)[$\w]+$/i
 
 		function parseExpr(str, category) {
@@ -5794,8 +5778,7 @@
 		var rforAs = /\s+as\s+([$\w]+)/
 		var rident = __webpack_require__(40).ident
 		var update = __webpack_require__(43)
-		var Cache = __webpack_require__(26)
-		var loopCache = new Cache(600)
+
 		var rinvalid = /^(null|undefined|NaN|window|this|\$index|\$id)$/
 		function getTrackKey(item) {
 		    var type = typeof item
@@ -5869,7 +5852,10 @@
 		        var cur = current[__index__]
 		        var pre = previous[__index__] || {}
 		        getCompareText(cur)
+		        delete pre.forDiff
 		        if(cur.compareText === pre.compareText){
+		            delete pre.enume
+		            avalon.shadowCopy(cur, pre)
 		            return 
 		        }
 		        cur.forDiff = true
@@ -7206,13 +7192,7 @@
 		                    var forDiff = directives['for'].diff(current, previous, steps, i)
 		                    if(typeof forDiff === 'number'){
 		                        i = forDiff
-		                    }else{
-		                        var preState = previous[i] || {}
-		                        avalon.shadowCopy(cur, preState)
-		                        delete cur.forDiff
-		                       // delete preState.enume
 		                    }
-
 		                } else if (cur.directive ) {//if widget
 		                    directives[cur.directive].diff(cur, pre, steps)
 		                }
@@ -8573,37 +8553,101 @@
 	/******/ ])
 	});
 	;
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(2)))
 
 /***/ },
-/* 3 */
+
+/***/ 81:
 /***/ function(module, exports) {
 
-	// removed by extract-text-webpack-plugin
+	//var avalon = require('avalon')
+
+	avalon.component('ms-button', {
+	    template: '<button type="button"><span><slot name="buttonText"></slot></span></button>',
+	    defaults: {
+	        buttonText: "button"
+	    },
+	    soleSlot: 'buttonText'
+	})
+
 
 /***/ },
-/* 4 */,
-/* 5 */,
-/* 6 */,
-/* 7 */
+
+/***/ 84:
 /***/ function(module, exports) {
 
-	// removed by extract-text-webpack-plugin
+	
+	avalon.component('ms-uptop',{
+	    template:"<div ms-css='{right:@distanceToRight,bottom:@distanceToBottom,width:@width,height:@height,position:fixed,background-image:@backgroundUrl,cursor:pointer}' ms-attr={title:@title} ms-on-click='@goTop' ms-visible='@toggle' class='btn btn-default'></div>",
+	    defaults :{
+	        distanceToRight: 50,
+	        distanceToBottom: 120,
+	        title: "回到顶部",
+	        width: 60,
+	        eight: 60,
+	        animate: false,
+	        toggle: false,
+	        $skipArray : ["timeId"],
+	        timeId : 0,
+	        goTop :function() {
+	            var scrollTop = $document.scrollTop()
+	                if (options.animate) {
+	                    vmodel.timeId = setTimeout(function() {
+	                        window.scrollBy(0, -100)
+	                        vmodel.goTop()
+	                    },200)
+	                    if (scrollTop==0) {
+	                        clearTimeout(vmodel.timeId);
+	                    }
+	                } else {
+	                    window.scrollTo(0, 0)
+	                }
+	        },
+	        backgroundUrl: 'url(http://source.qunarzz.com/general/oniui/uptop/up.png)'//http://source.qunarzz.com/general/oniui/uptop/up.png"
+	    },
+	    onInit: function () {
+	        avalon(document).bind("scroll", throttle(scrollCallback, 100, 200))
+	        function throttle(fn, delay, mustRunDelay, args){
+	            var timer = null;
+	            var t_start;
+	            return function(){
+	                var context = this, t_curr = +new Date();
+	                clearTimeout(timer);
+	                if(!t_start){
+	                    t_start = t_curr;
+	                }
+	                if(t_curr - t_start >= mustRunDelay){
+	                    fn.apply(context, args);
+	                    t_start = t_curr;
+	                }
+	                else {
+	                    timer = setTimeout(function(){
+	                        fn.apply(context, args);
+	                    }, delay);
+	                }
+	            };
+	        }
+	        function scrollCallback() {
+	            var scrollTop = $document.scrollTop();
+	            if (scrollTop > 200) {
+	                this.toggle = true;
+	            } else {
+	                this.toggle = false
+	            }
+	        }
+	        console.log('onInit')
+	    },
+	    onReady: function () {
+	        console.log('onReady')
+	    },
+	    onViewChange: function () {
+	        console.log('onViewChange')
+	    },
+	    onDispose: function () {
+	        console.log('onDispose')
+	    }
+	})
 
-/***/ },
-/* 8 */,
-/* 9 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-/* 10 */,
-/* 11 */,
-/* 12 */
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
 
 /***/ }
-/******/ ]);
+
+/******/ });

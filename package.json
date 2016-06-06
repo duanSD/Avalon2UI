@@ -23,7 +23,9 @@
   "homepage": "https://github.com/duanSD/Avalon2UI#readme",
   "devDependencies": {
     "avalon2": "^2.0.6",
+    "bootstrap": "^3.3.6",
     "css-loader": "^0.23.1",
+    "ejs": "^2.4.2",
     "extract-text-webpack-plugin": "^1.0.1",
     "file-loader": "^0.8.5",
     "glob": "^7.0.3",

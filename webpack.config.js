@@ -23,7 +23,7 @@ var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
 const debug = process.env.NODE_ENV !== 'production';
 
-var entries = getEntry('src/js/**/*.js', 'src/js/');
+var entries = getEntry('src/js/model/**/*.js', 'src/js/model/');
 var chunks = Object.keys(entries);
 
 var config={
@@ -69,15 +69,15 @@ var config={
                 test: /\.(png|jpg|gif)$/,
                 loader: 'url-loader?limit=8192&name=./images/[hash].[ext]'
             },
-           // { test: /\.scss$/, loader: 'style!css!sass?sourceMap'},
-           // {test: /\.(tpl|ejs)$/, loader: 'ejs'},
+           { test: /\.scss$/, loader: 'style!css!sass?sourceMap'},
+           {test: /\.(tpl|ejs)$/, loader: 'ejs'}
         ]
     },
     //插件
     plugins: [
-        //使用ProvidePlugin加载使用频率高的模块
+        //使用ProvidePlugin加载使用频率高的模块 这里指加载node_modules里的模块。
         new webpack.ProvidePlugin({ //加载jq
-            avalon:'avalon2'
+           // avalon:'avalon2'
            // $: 'jquery'
         }),
 
@@ -126,15 +126,15 @@ var config={
 
 
       // new webpack.HotModuleReplacementPlugin() //热加载
-    ]
-  /*  //其它解决方案配置
+    ],
+    //其它解决方案配置
     resolve: {
         extensions: ['', '.js', '.json', '.less','.scss', '.ejs', '.png', '.jpg'],
         alias: {
-            avalon:'./avalon/avalon',
+            avalon:'../lib/avalon/avalon',
             filter: path.join(__dirname, 'src/filters')
         }
-    },*/
+    }
     //使用webpack-dev-server，提高开发效率
    /* ,devServer: {
         contentBase: './',
@@ -194,29 +194,18 @@ function getEntry(globPath, pathDir) {
         entry, dirname, basename, pathname, extname;
     for (var i = 0; i < files.length; i++) {
         entry = files[i];
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-entry:'+entry);
         dirname = path.dirname(entry);
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-dirname:'+dirname);
         extname = path.extname(entry);
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-extname:'+extname);
         basename = path.basename(entry, extname);
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-basename:'+basename);
         pathname = path.join(dirname, basename);
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-pathname1:'+pathname);
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-pathDir:'+pathDir);
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-pathDir01:'+pathname.replace(new RegExp('^' + pathDir), ''));
         pathname = pathDir ? entry.replace(new RegExp('^' + pathDir), '').split('.')[0] : entry;
         //pathname = pathDir ? pathname.replace(new RegExp('^' + pathDir), '') : pathname;
         //pathname = pathDir ? basename: pathname;
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-pathname2:'+pathname);
         entries[pathname] = ['./' + entry];
-        console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-pathname3:'+['./' + entry]);
 
     }
     for(n in entries){
         console.log('DDDDDDD-'+n+':'+entries[n]);
     }
-
-    console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDD-entries:'+entries);
     return entries;
 }

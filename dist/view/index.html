@@ -3,23 +3,58 @@
 <head>
 	<meta charset="UTF-8">
 	<title>首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
 	<meta name="description" content="基于webpack的前端工程化开发解决方案探索"/>
 	<!--
         描述：head中无需再引入css以及facicon，webpack将根据入口JS文件的要求自动实现按需加载或者生成style标签
     -->
-<link rel="shortcut icon" href="/dist/favicon.ico"><link href="/dist/css/vendors.css?92f3a8dd4689e2c8dec4" rel="stylesheet"></head>
+<link rel="shortcut icon" href="/dist/favicon.ico"><link href="/dist/css/vendors.css?c83c36a11d995416fb62" rel="stylesheet"><link href="/dist/css/index.css?c83c36a11d995416fb62" rel="stylesheet"></head>
 <body ms-controller="test">
 	<div class="g-hd" ms-text="@aaa"></div>
-	<div class="g-bd">
+	<!--<div class="g-bd">
 		<input type="button" value="弹窗" class="btn">
 		<p class="img">
 			<img src="/dist/./images/d5dc8228efc53d8e3508e136b61a5144.png" alt="">
 		</p>
-		<p><ms-button /></p>
-	</div>
+	</div>-->
+	<p><ms-button /></p>
+    <xmp ms-widget='{is:"ms-button"}'></xmp>
+    <xmp ms-widget='{is:"ms-uptop"}'></xmp>
+    <xmp ms-widget='[{is:"ms-panel"},@panelConf]'></xmp>
 	<div class="g-ft" ms-text="@aaaaa"></div>
 	<!--
         描述： body中同样无需单独引入JS文件，webpack会根据入口JS文件自动实现按需加载或者生成script标签，还可以生成对应的hash值
     -->
-<script type="text/javascript" src="/dist/js/vendors.js?92f3a8dd4689e2c8dec4"></script><script type="text/javascript" src="/dist/js/index.js?92f3a8dd4689e2c8dec4"></script></body>
+    <nav>
+        <ul class="pagination">
+            <li>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <form ms-validate="@validate">
+        <p><input ms-duplex="@aaa" placeholder="username"
+                  ms-rules='{required:true,chs:true}' >{{@aaa}}</p>
+        <p><input type="password" id="pw" placeholder="password"
+                  ms-rules='{required:true}'
+                  ms-duplex="@bbb" /></p>
+        <p><input type="password"
+                  ms-rules='{required:true,equalto:"pw"}' placeholder="再填一次"
+                  ms-duplex="@ccc | change" /></p>
+        <p><input type="submit" value="submit"/></p>
+    </form>
+<script type="text/javascript" src="/dist/js/vendors.js?c83c36a11d995416fb62"></script><script type="text/javascript" src="/dist/js/index.js?c83c36a11d995416fb62"></script></body>
 </html>

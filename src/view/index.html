@@ -3,6 +3,8 @@
 <head>
 	<meta charset="UTF-8">
 	<title>首页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+<!--    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">-->
 	<meta name="description" content="基于webpack的前端工程化开发解决方案探索"/>
 	<!--
         描述：head中无需再引入css以及facicon，webpack将根据入口JS文件的要求自动实现按需加载或者生成style标签
@@ -10,16 +12,49 @@
 </head>
 <body ms-controller="test">
 	<div class="g-hd" ms-text="@aaa"></div>
-	<div class="g-bd">
+	<!--<div class="g-bd">
 		<input type="button" value="弹窗" class="btn">
 		<p class="img">
 			<img src="../images/4.png" alt="">
 		</p>
-		<p><ms-button /></p>
-	</div>
+	</div>-->
+	<p><ms-button /></p>
+    <xmp ms-widget='{is:"ms-button"}'></xmp>
+    <xmp ms-widget='{is:"ms-uptop"}'></xmp>
+    <xmp ms-widget='[{is:"ms-panel"},@panelConf]'></xmp>
 	<div class="g-ft" ms-text="@aaaaa"></div>
 	<!--
         描述： body中同样无需单独引入JS文件，webpack会根据入口JS文件自动实现按需加载或者生成script标签，还可以生成对应的hash值
     -->
+    <nav>
+        <ul class="pagination">
+            <li>
+                <a href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            <li><a href="#">1</a></li>
+            <li><a href="#">2</a></li>
+            <li><a href="#">3</a></li>
+            <li><a href="#">4</a></li>
+            <li><a href="#">5</a></li>
+            <li>
+                <a href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    <form ms-validate="@validate">
+        <p><input ms-duplex="@aaa" placeholder="username"
+                  ms-rules='{required:true,chs:true}' >{{@aaa}}</p>
+        <p><input type="password" id="pw" placeholder="password"
+                  ms-rules='{required:true}'
+                  ms-duplex="@bbb" /></p>
+        <p><input type="password"
+                  ms-rules='{required:true,equalto:"pw"}' placeholder="再填一次"
+                  ms-duplex="@ccc | change" /></p>
+        <p><input type="submit" value="submit"/></p>
+    </form>
 </body>
 </html>
