@@ -44,7 +44,7 @@ app.listen(devPort, function() {
     console.log('dev server on http://localhost:' + devPort+'\n');
 });
 
-fs.watch('./src/view/', function() {
+/*fs.watch('./src/view/', function() {
     exec('webpack --progress --hide-modules', function(err, stdout, stderr) {
         if (err) {
             console.log(stderr);
@@ -52,6 +52,6 @@ fs.watch('./src/view/', function() {
             console.log(stdout);
         }
     });
-});
+});*/
 
 //app.listen(9090);

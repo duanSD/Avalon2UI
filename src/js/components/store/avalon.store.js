@@ -5,7 +5,9 @@
  *    <p>   IE8+及高级浏览器使用localStorage，旧式IE使用userData。这些方法放于avalon.store对象上。</p>
  *  @updatetime 2011-11-21
  */
+/*
 define(["avalon", "../json/avalon.json"], function(avalon) {
+*/
 
     var store = {
         //一些接口(空实现)
@@ -192,8 +194,8 @@ define(["avalon", "../json/avalon.json"], function(avalon) {
         store.disabled = true
     }
     avalon.store = store
-    return avalon;
-})
+/*    return avalon;
+})*/
 /*
  * @other
  * 这里提供了一个用cookie实现本地储存的方案 https://developer.mozilla.org/en/DOM/Storage

@@ -1,0 +1,90 @@
+<div class="carousel slide"
+     ms-css="[{width:@containerWidth,height:@containerHeight}]" style="overflow:hidden"
+     ms-on-mouseenter="@mouseEnter" ms-on-mouseleave="@mouseLeave($event)">
+    <!-- Indicators -->
+    <ol class="carousel-indicators"
+
+        ms-visible="@alwaysShowSelection && @componentVisible"
+        ms-css="{marginLeft:@selectionWrapOffset}"
+    >
+        <li  ms-for="($index,el) in @selections"
+            ms-class="{active:el==@currentIndex}"
+            ms-on-mouseenter="@selectPic($index,$event)"
+            ms-on-click="@selectPic($index,$event)"
+            ms-on-mouseleave="@mouseLeave(@event)"
+        ></li>
+    </ol>
+
+    <!-- Wrapper for slides -->
+    <div class="carousel-inner" ms-css="{width:@innerWidth,left:@panelOffsetX,position:@panelPosition}">
+        <div ms-for="($index,el) in @pictures" class="item active"
+             ms-css="{width:@pictureWidth,position:@itemPosition,opacity:@getOpacity($index)}"
+                style="height:100%; vertical-align:middle; zoom:1; overflow: hidden;textAlign:center;display: inline-block;">
+            <img ms-if="@lazyload" ms-src="@lazyloadImg" />
+            <img ms-attr="{src:el.src,alt:el.alt}" ms-on-load="@imgOnload($event, $index)"  />
+            <a target="_blank"
+               ms-if="typeof @links[$index] !== 'undefined' && @links[$index] !== ''"
+               ms-attr="{title:@links[$index].title,href:@links[$index].href}">
+            </a>
+            <div class="carousel-caption">
+            </div>
+        </div>
+    </div>
+    <!-- Controls -->
+    <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev"
+       ms-on-click="@animate(-1)"
+       ms-on-mouseenter="@arrowHover('left')"
+       ms-on-mouseleave="@arrowBlur('left')"
+       ms-visible="@arrowVisible && @componentVisible"
+       ms-attr="{src:@arrowLeftSrc}"
+    >
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next"
+       ms-click="@animate(1)"
+       ms-mouseenter="@arrowHover('right')"
+       ms-mouseleave="@arrowBlur('right')"
+       ms-visible="@arrowVisible && @componentVisible"
+       ms-attr="{src:@arrowRightSrc}"
+     >
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+
+    <!--<div class="oni-carousel-selection-wrap"
+         ms-class="oni-carousel-selection-wrap-keep-right:showDescription"
+         ms-visible="alwaysShowSelection && componentVisible"
+         ms-css-margin-left="selectionWrapOffset"
+            >
+        <a  class="oni-carousel-selection-link"
+            ms-class="selected:el==currentIndex"
+            ms-mouseenter="selectPic($index,$event)"
+            ms-click="selectPic($index,$event)"
+            ms-mouseleave="mouseLeave(this)"
+            ms-repeat="selections"
+                ></a>
+    </div>
+    <div class="oni-carousel-description-wrap" ms-if="showDescription">
+        <div class="oni-carousel-description"
+             ms-repeat="pictures"
+             ms-visible="currentIndex === $index && pictures[$index].description"
+             ms-attr-title="{{pictures[$index].description}}">
+            {{pictures[$index].description | html}}
+        </div>
+    </div>
+    <img class="oni-carousel-arrow oni-carousel-prev"
+         ms-click="animate(-1)"
+         ms-mouseenter="arrowHover('left')"
+         ms-mouseleave="arrowBlur('left')"
+         ms-visible="arrowVisible && componentVisible"
+         ms-src="arrowLeftSrc"
+            />
+    <img class="oni-carousel-arrow oni-carousel-after"
+         ms-click="animate(1)"
+         ms-mouseenter="arrowHover('right')"
+         ms-mouseleave="arrowBlur('right')"
+         ms-visible="arrowVisible && componentVisible"
+         ms-src="arrowRightSrc"
+            />-->
+</div>

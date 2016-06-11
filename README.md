@@ -99,3 +99,11 @@ validation 在avalon内置了验证这一块的功能
 mmrequest 请求插件
 
 uptop  返回顶部
+
+md5   RSA  转码加密工个
+
+carousel  图片轮播 在样式上还需要做些调整
+
+page 项目中的分页组件。暂时只实现了单页使用一个组件的功能。没有测试多个组件同时使用的情况
+
+browser 客户端检测

@@ -30,7 +30,7 @@
 /******/ 	// "0" means "already loaded"
 /******/ 	// Array means "loading", array contains callbacks
 /******/ 	var installedChunks = {
-/******/ 		2:0
+/******/ 		3:0
 /******/ 	};
 
 /******/ 	// The require function
@@ -76,7 +76,7 @@
 /******/ 			script.charset = 'utf-8';
 /******/ 			script.async = true;
 
-/******/ 			script.src = __webpack_require__.p + "js/" + chunkId + ".chunk.js?" + {"0":"57dea872b36389160fe3","1":"506d5f6e501247b9c74b"}[chunkId] + "";
+/******/ 			script.src = __webpack_require__.p + "js/" + chunkId + ".chunk.js?" + {"0":"e87cf6745a3301ac4c25","1":"f3414ec59cc68bebdda5","2":"912795179a58cb5fbac5"}[chunkId] + "";
 /******/ 			head.appendChild(script);
 /******/ 		}
 /******/ 	};
@@ -94,20 +94,6 @@
 /******/ ({
 
 /***/ 71:
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-
-/***/ 78:
-/***/ function(module, exports) {
-
-	// removed by extract-text-webpack-plugin
-
-/***/ },
-
-/***/ 80:
 /***/ function(module, exports, __webpack_require__) {
 
 	/*! built in 2016-5-29:1 version 2.06 by 司徒正美 */
@@ -8556,97 +8542,17 @@
 
 /***/ },
 
-/***/ 81:
+/***/ 72:
 /***/ function(module, exports) {
 
-	//var avalon = require('avalon')
-
-	avalon.component('ms-button', {
-	    template: '<button type="button"><span><slot name="buttonText"></slot></span></button>',
-	    defaults: {
-	        buttonText: "button"
-	    },
-	    soleSlot: 'buttonText'
-	})
-
+	// removed by extract-text-webpack-plugin
 
 /***/ },
 
-/***/ 84:
+/***/ 79:
 /***/ function(module, exports) {
 
-	
-	avalon.component('ms-uptop',{
-	    template:"<div ms-css='{right:@distanceToRight,bottom:@distanceToBottom,width:@width,height:@height,position:fixed,background-image:@backgroundUrl,cursor:pointer}' ms-attr={title:@title} ms-on-click='@goTop' ms-visible='@toggle' class='btn btn-default'></div>",
-	    defaults :{
-	        distanceToRight: 50,
-	        distanceToBottom: 120,
-	        title: "回到顶部",
-	        width: 60,
-	        eight: 60,
-	        animate: false,
-	        toggle: false,
-	        $skipArray : ["timeId"],
-	        timeId : 0,
-	        goTop :function() {
-	            var scrollTop = $document.scrollTop()
-	                if (options.animate) {
-	                    vmodel.timeId = setTimeout(function() {
-	                        window.scrollBy(0, -100)
-	                        vmodel.goTop()
-	                    },200)
-	                    if (scrollTop==0) {
-	                        clearTimeout(vmodel.timeId);
-	                    }
-	                } else {
-	                    window.scrollTo(0, 0)
-	                }
-	        },
-	        backgroundUrl: 'url(http://source.qunarzz.com/general/oniui/uptop/up.png)'//http://source.qunarzz.com/general/oniui/uptop/up.png"
-	    },
-	    onInit: function () {
-	        avalon(document).bind("scroll", throttle(scrollCallback, 100, 200))
-	        function throttle(fn, delay, mustRunDelay, args){
-	            var timer = null;
-	            var t_start;
-	            return function(){
-	                var context = this, t_curr = +new Date();
-	                clearTimeout(timer);
-	                if(!t_start){
-	                    t_start = t_curr;
-	                }
-	                if(t_curr - t_start >= mustRunDelay){
-	                    fn.apply(context, args);
-	                    t_start = t_curr;
-	                }
-	                else {
-	                    timer = setTimeout(function(){
-	                        fn.apply(context, args);
-	                    }, delay);
-	                }
-	            };
-	        }
-	        function scrollCallback() {
-	            var scrollTop = $document.scrollTop();
-	            if (scrollTop > 200) {
-	                this.toggle = true;
-	            } else {
-	                this.toggle = false
-	            }
-	        }
-	        console.log('onInit')
-	    },
-	    onReady: function () {
-	        console.log('onReady')
-	    },
-	    onViewChange: function () {
-	        console.log('onViewChange')
-	    },
-	    onDispose: function () {
-	        console.log('onDispose')
-	    }
-	})
-
+	// removed by extract-text-webpack-plugin
 
 /***/ }
 

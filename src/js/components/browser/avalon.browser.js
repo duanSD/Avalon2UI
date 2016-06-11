@@ -1,4 +1,4 @@
-define(["avalon"], function(avalon) {
+/*define(["avalon"], function(avalon) {*/
     var pf = (navigator.platform || "").toLowerCase(),
             ua = navigator.userAgent.toLowerCase(),
             s;
@@ -102,8 +102,8 @@ define(["avalon"], function(avalon) {
             updateProperty("engine", "trident", toFixedVersion("5"))
         }
     }
-    return avalon
-})
+/*    return avalon
+})*/
 
 
 //by 司徒正美

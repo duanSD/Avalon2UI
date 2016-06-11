@@ -5,18 +5,18 @@ var path=require('path');
 var glob=require('glob')
 var webpack=require('webpack');
 /*
- extract-text-webpack-plugin插件，
- 有了它就可以将你的样式提取到单独的css文件里，
- 妈妈再也不用担心样式会被打包到js文件里了。
+ extract-text-webpack-plugin鎻掍欢锛?
+ 鏈変簡瀹冨氨鍙互灏嗕綘鐨勬牱寮忔彁鍙栧埌鍗曠嫭鐨刢ss鏂囦欢閲岋紝
+ 濡堝鍐嶄篃涓嶇敤鎷呭績鏍峰紡浼氳鎵撳寘鍒癹s鏂囦欢閲屼簡銆?
  */
 var ExtractTextPlugin = require('extract-text-webpack-plugin');
 /*
- html-webpack-plugin插件，重中之重，webpack中生成HTML的插件，
- 具体可以去这里查看https://www.npmjs.com/package/html-webpack-plugin
+ html-webpack-plugin鎻掍欢锛岄噸涓箣閲嶏紝webpack涓敓鎴怘TML鐨勬彃浠讹紝
+ 鍏蜂綋鍙互鍘昏繖閲屾煡鐪媓ttps://www.npmjs.com/package/html-webpack-plugin
  */
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
-//提公用js
+//鎻愬叕鐢╦s
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
@@ -27,45 +27,45 @@ var entries = getEntry('src/js/model/**/*.js', 'src/js/model/');
 var chunks = Object.keys(entries);
 
 var config={
-   /* entry: { //配置入口文件，有几个写几个
+   /* entry: { //閰嶇疆鍏ュ彛鏂囦欢锛屾湁鍑犱釜鍐欏嚑涓?
         index: './src/js/model/index.js',
         list: './src/js/model/list.js',
         about: './src/js/model/about.js'
     },*/
     entry:entries,
     output: {
-        path: path.join(__dirname, 'dist'), //输出目录的配置，模板、样式、脚本、图片等资源的路径配置都相对于它
-        publicPath: '/dist/',               //模板、样式、脚本、图片等资源对应的server上的路径
-        filename: 'js/[name].js',           //每个页面对应的主js的生成配置
-        chunkFilename: 'js/[id].chunk.js?[chunkhash]'   //chunk生成的配置
+        path: path.join(__dirname, 'dist'), //杈撳嚭鐩綍鐨勯厤缃紝妯℃澘銆佹牱寮忋?佽剼鏈?佸浘鐗囩瓑璧勬簮鐨勮矾寰勯厤缃兘鐩稿浜庡畠
+        publicPath: '/dist/',               //妯℃澘銆佹牱寮忋?佽剼鏈?佸浘鐗囩瓑璧勬簮瀵瑰簲鐨剆erver涓婄殑璺緞
+        filename: 'js/[name].js',           //姣忎釜椤甸潰瀵瑰簲鐨勪富js鐨勭敓鎴愰厤缃?
+        chunkFilename: 'js/[id].chunk.js?[chunkhash]'   //chunk鐢熸垚鐨勯厤缃?
     },
 
     module: {
-        //加载器配置
-        loaders: [//加载器，关于各个加载器的参数配置，可自行搜索之。
+        //鍔犺浇鍣ㄩ厤缃?
+        loaders: [//鍔犺浇鍣紝鍏充簬鍚勪釜鍔犺浇鍣ㄧ殑鍙傛暟閰嶇疆锛屽彲鑷鎼滅储涔嬨??
             {
                 test: /\.css$/,
-                //配置css的抽取器、加载器。'-loader'可以省去
+                //閰嶇疆css鐨勬娊鍙栧櫒銆佸姞杞藉櫒銆?'-loader'鍙互鐪佸幓
                 loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
             }, {
                 test: /\.less$/,
-                //配置less的抽取器、加载器。中间!有必要解释一下，
-                //根据从右到左的顺序依次调用less、css加载器，前一个的输出是后一个的输入
-                //你也可以开发自己的loader哟。有关loader的写法可自行谷歌之。
+                //閰嶇疆less鐨勬娊鍙栧櫒銆佸姞杞藉櫒銆備腑闂?!鏈夊繀瑕佽В閲婁竴涓嬶紝
+                //鏍规嵁浠庡彸鍒板乏鐨勯『搴忎緷娆¤皟鐢╨ess銆乧ss鍔犺浇鍣紝鍓嶄竴涓殑杈撳嚭鏄悗涓?涓殑杈撳叆
+                //浣犱篃鍙互寮?鍙戣嚜宸辩殑loader鍝熴?傛湁鍏砽oader鐨勫啓娉曞彲鑷璋锋瓕涔嬨??
                 loader: ExtractTextPlugin.extract('css!less')
             }, {
-                //html模板加载器，可以处理引用的静态资源，默认配置参数attrs=img:src，处理图片的src引用的资源
-                //比如你配置，attrs=img:src img:data-src就可以一并处理data-src引用的资源了，就像下面这样
+                //html妯℃澘鍔犺浇鍣紝鍙互澶勭悊寮曠敤鐨勯潤鎬佽祫婧愶紝榛樿閰嶇疆鍙傛暟attrs=img:src锛屽鐞嗗浘鐗囩殑src寮曠敤鐨勮祫婧?
+                //姣斿浣犻厤缃紝attrs=img:src img:data-src灏卞彲浠ヤ竴骞跺鐞哾ata-src寮曠敤鐨勮祫婧愪簡锛屽氨鍍忎笅闈㈣繖鏍?
                 test: /\.html$/,
-                loader: "html?-minimize"    //避免压缩html,https://github.com/webpack/html-loader/issues/50
+                loader: "html?-minimize"    //閬垮厤鍘嬬缉html,https://github.com/webpack/html-loader/issues/50
                 //loader: "html?attrs=img:src img:data-src"
             }, {
-                //文件加载器，处理文件静态资源
+                //鏂囦欢鍔犺浇鍣紝澶勭悊鏂囦欢闈欐?佽祫婧?
                 test: /\.(woff|woff2|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
                 loader: 'file-loader?name=./fonts/[name].[ext]'
             }, {
-                //图片加载器，雷同file-loader，更适合图片，可以将较小的图片转成base64，减少http请求
-                //如下配置，将小于8192byte的图片转成base64码
+                //鍥剧墖鍔犺浇鍣紝闆峰悓file-loader锛屾洿閫傚悎鍥剧墖锛屽彲浠ュ皢杈冨皬鐨勫浘鐗囪浆鎴恇ase64锛屽噺灏慼ttp璇锋眰
+                //濡備笅閰嶇疆锛屽皢灏忎簬8192byte鐨勫浘鐗囪浆鎴恇ase64鐮?
                 test: /\.(png|jpg|gif)$/,
                 loader: 'url-loader?limit=8192&name=./images/[hash].[ext]'
             },
@@ -73,75 +73,83 @@ var config={
            {test: /\.(tpl|ejs)$/, loader: 'ejs'}
         ]
     },
-    //插件
+    //鎻掍欢
     plugins: [
-        //使用ProvidePlugin加载使用频率高的模块 这里指加载node_modules里的模块。
-        new webpack.ProvidePlugin({ //加载jq
-           // avalon:'avalon2'
+        //浣跨敤ProvidePlugin鍔犺浇浣跨敤棰戠巼楂樼殑妯″潡 杩欓噷姝ｅ父鎸囧姞杞絥ode_modules閲岀殑妯″潡銆?
+        new webpack.ProvidePlugin({ //鍔犺浇jq
+           //avalon:'avalon2'
+            //avalon:'avalon'
            // $: 'jquery'
         }),
 
-        //提公用js到common.js文件中
+        //鎻愬叕鐢╦s鍒癱ommon.js鏂囦欢涓?
         // new webpack.optimize.CommonsChunkPlugin('common.js'),
         /* new webpack.optimize.CommonsChunkPlugin({
-         name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
-         chunks: ['index','list','about'], //提取哪些模块共有的部分
-         minChunks: 3 // 提取至少3个模块共有的部分
+         name: 'vendors', // 灏嗗叕鍏辨ā鍧楁彁鍙栵紝鐢熸垚鍚嶄负`vendors`鐨刢hunk
+         chunks: ['index','list','about'], //鎻愬彇鍝簺妯″潡鍏辨湁鐨勯儴鍒?
+         minChunks: 3 // 鎻愬彇鑷冲皯3涓ā鍧楀叡鏈夌殑閮ㄥ垎
          }),*/
 
         new CommonsChunkPlugin({
-            name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
+            name: 'vendors', // 灏嗗叕鍏辨ā鍧楁彁鍙栵紝鐢熸垚鍚嶄负`vendors`鐨刢hunk
             chunks: chunks,
-            minChunks: chunks.length // 提取所有entry共同依赖的模块
+            minChunks: chunks.length // 鎻愬彇鎵?鏈塭ntry鍏卞悓渚濊禆鐨勬ā鍧?
         }),
 
-        //将样式统一发布到.css文件中
-        //将样式统一发布到style.css中
+        //灏嗘牱寮忕粺涓?鍙戝竷鍒?.css鏂囦欢涓?
+        //灏嗘牱寮忕粺涓?鍙戝竷鍒皊tyle.css涓?
         /* new ExtractTextPlugin("style.css", {
          allChunks: true,
          disable: false
          }),*/
-        new ExtractTextPlugin('css/[name].css'), //单独使用link标签加载css并设置路径，相对于output配置中的publickPath
+        new ExtractTextPlugin('css/[name].css'), //鍗曠嫭浣跨敤link鏍囩鍔犺浇css骞惰缃矾寰勶紝鐩稿浜巓utput閰嶇疆涓殑publickPath
 
-        //HtmlWebpackPlugin，模板生成相关的配置，每个对于一个页面的配置，有几个写几个
-      /*  new HtmlWebpackPlugin({ //根据模板插入css/js等生成最终HTML
-            favicon: './src/images/favicon.ico', //favicon路径，通过webpack引入同时可以生成hash值
-            filename: './view/index.html', //生成的html存放路径，相对于path
-            template: './src/view/index.html', //html模板路径
-            inject: 'body', //js插入的位置，true/'head'/'body'/false
-            hash: true, //为静态资源生成hash值
-            chunks: ['vendors', 'index'],//需要引入的chunk，不配置就会引入所有页面的资源
-            minify: { //压缩HTML文件
-                removeComments: true, //移除HTML中的注释
-                collapseWhitespace: false //删除空白符与换行符
+        //HtmlWebpackPlugin锛屾ā鏉跨敓鎴愮浉鍏崇殑閰嶇疆锛屾瘡涓浜庝竴涓〉闈㈢殑閰嶇疆锛屾湁鍑犱釜鍐欏嚑涓?
+      /*  new HtmlWebpackPlugin({ //鏍规嵁妯℃澘鎻掑叆css/js绛夌敓鎴愭渶缁圚TML
+            favicon: './src/images/favicon.ico', //favicon璺緞锛岄?氳繃webpack寮曞叆鍚屾椂鍙互鐢熸垚hash鍊?
+            filename: './view/index.html', //鐢熸垚鐨刪tml瀛樻斁璺緞锛岀浉瀵逛簬path
+            template: './src/view/index.html', //html妯℃澘璺緞
+            inject: 'body', //js鎻掑叆鐨勪綅缃紝true/'head'/'body'/false
+            hash: true, //涓洪潤鎬佽祫婧愮敓鎴恏ash鍊?
+            chunks: ['vendors', 'index'],//闇?瑕佸紩鍏ョ殑chunk锛屼笉閰嶇疆灏变細寮曞叆鎵?鏈夐〉闈㈢殑璧勬簮
+            minify: { //鍘嬬缉HTML鏂囦欢
+                removeComments: true, //绉婚櫎HTML涓殑娉ㄩ噴
+                collapseWhitespace: false //鍒犻櫎绌虹櫧绗︿笌鎹㈣绗?
             }
         }),
         */
-        debug ? function() {} : new UglifyJsPlugin({ //压缩代码
+        debug ? function() {} : new UglifyJsPlugin({ //鍘嬬缉浠ｇ爜
             compress: {
                 warnings: false
             },
-            except: ['$super', '$', 'exports', 'require','avalon'] //排除关键字
+            except: ['$super', '$', 'exports', 'require','avalon'] //鎺掗櫎鍏抽敭瀛?
         }),
 
 
-      // new webpack.HotModuleReplacementPlugin() //热加载
+      // new webpack.HotModuleReplacementPlugin() //鐑姞杞?
     ],
-    //其它解决方案配置
+    //鍏跺畠瑙ｅ喅鏂规閰嶇疆
     resolve: {
         extensions: ['', '.js', '.json', '.less','.scss', '.ejs', '.png', '.jpg'],
         alias: {
-            avalon:'../lib/avalon/avalon',
-            filter: path.join(__dirname, 'src/filters')
+            main:'../lib/avalon/main',//avalon涓讳綋鍔熻兘瀹屾暣浠ｇ爜
+            avalon:'../lib/avalon/avalon',//绾痑valon
+            mmPromise:'../lib/avalon/mmPromise',
+            mmHistory:'../lib/avalon/mmHistory',
+            mmRequest:'../lib/avalon/mmRequest',
+            mmAnimate:'../lib/avalon/mmAnimate',
+            mmRouter:'../lib/avalon/mmRouter',
+            mmState:'../lib/avalon/mmState'
+            //filter: path.join(__dirname, 'src/filters')
         }
     }
-    //使用webpack-dev-server，提高开发效率
+    //浣跨敤webpack-dev-server锛屾彁楂樺紑鍙戞晥鐜?
    /* ,devServer: {
         contentBase: './',
         host: 'localhost',
-        port: 9090, //默认8080
-        inline: true, //可以监控js变化
-        hot: true //热启动
+        port: 9090, //榛樿8080
+        inline: true, //鍙互鐩戞帶js鍙樺寲
+        hot: true //鐑惎鍔?
     }*/
 }
 
@@ -149,29 +157,29 @@ var pages = Object.keys(getEntry('src/view/**/*.html', 'src/view/'));
 pages.forEach(function(pathname){
     console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDpathname0:'+pathname);
     var conf={
-        filename: './view/' + pathname + '.html', //生成的html存放路径，相对于path
-        template: './src/view/' + pathname + '.html', //html模板路径 相对的路径
-        inject: 'body'  //js插入的位置，true/'head'/'body'/false
+        filename: './view/' + pathname + '.html', //鐢熸垚鐨刪tml瀛樻斁璺緞锛岀浉瀵逛簬path
+        template: './src/view/' + pathname + '.html', //html妯℃澘璺緞 鐩稿鐨勮矾寰?
+        inject: 'body'  //js鎻掑叆鐨勪綅缃紝true/'head'/'body'/false
         /*
-         * 压缩这块，调用了html-minify，会导致压缩时候的很多html语法检查问题，
-         * 如在html标签属性上使用{{...}}表达式，所以很多情况下并不需要在此配置压缩项，
-         * 另外，UglifyJsPlugin会在压缩代码的时候连同html一起压缩。
-         * 为避免压缩html，需要在html-loader上配置'html?-minimize'，见loaders中html-loader的配置。
+         * 鍘嬬缉杩欏潡锛岃皟鐢ㄤ簡html-minify锛屼細瀵艰嚧鍘嬬缉鏃跺?欑殑寰堝html璇硶妫?鏌ラ棶棰橈紝
+         * 濡傚湪html鏍囩灞炴?т笂浣跨敤{{...}}琛ㄨ揪寮忥紝鎵?浠ュ緢澶氭儏鍐典笅骞朵笉闇?瑕佸湪姝ら厤缃帇缂╅」锛?
+         * 鍙﹀锛孶glifyJsPlugin浼氬湪鍘嬬缉浠ｇ爜鐨勬椂鍊欒繛鍚宧tml涓?璧峰帇缂┿??
+         * 涓洪伩鍏嶅帇缂﹉tml锛岄渶瑕佸湪html-loader涓婇厤缃?'html?-minimize'锛岃loaders涓環tml-loader鐨勯厤缃??
          */
-        // minify: { //压缩HTML文件
-        //  removeComments: true, //移除HTML中的注释
-        //  collapseWhitespace: false //删除空白符与换行符
+        // minify: { //鍘嬬缉HTML鏂囦欢
+        //  removeComments: true, //绉婚櫎HTML涓殑娉ㄩ噴
+        //  collapseWhitespace: false //鍒犻櫎绌虹櫧绗︿笌鎹㈣绗?
         // }
-        /*  new HtmlWebpackPlugin({ //根据模板插入css/js等生成最终HTML
-         favicon: './src/images/favicon.ico', //favicon路径，通过webpack引入同时可以生成hash值
-         filename: './view/index.html', //生成的html存放路径，相对于path
-         template: './src/view/index.html', //html模板路径
-         inject: 'body', //js插入的位置，true/'head'/'body'/false
-         hash: true, //为静态资源生成hash值
-         chunks: ['vendors', 'index'],//需要引入的chunk，不配置就会引入所有页面的资源
-         minify: { //压缩HTML文件
-         removeComments: true, //移除HTML中的注释
-         collapseWhitespace: false //删除空白符与换行符
+        /*  new HtmlWebpackPlugin({ //鏍规嵁妯℃澘鎻掑叆css/js绛夌敓鎴愭渶缁圚TML
+         favicon: './src/images/favicon.ico', //favicon璺緞锛岄?氳繃webpack寮曞叆鍚屾椂鍙互鐢熸垚hash鍊?
+         filename: './view/index.html', //鐢熸垚鐨刪tml瀛樻斁璺緞锛岀浉瀵逛簬path
+         template: './src/view/index.html', //html妯℃澘璺緞
+         inject: 'body', //js鎻掑叆鐨勪綅缃紝true/'head'/'body'/false
+         hash: true, //涓洪潤鎬佽祫婧愮敓鎴恏ash鍊?
+         chunks: ['vendors', 'index'],//闇?瑕佸紩鍏ョ殑chunk锛屼笉閰嶇疆灏变細寮曞叆鎵?鏈夐〉闈㈢殑璧勬簮
+         minify: { //鍘嬬缉HTML鏂囦欢
+         removeComments: true, //绉婚櫎HTML涓殑娉ㄩ噴
+         collapseWhitespace: false //鍒犻櫎绌虹櫧绗︿笌鎹㈣绗?
          }
          }),
          */
