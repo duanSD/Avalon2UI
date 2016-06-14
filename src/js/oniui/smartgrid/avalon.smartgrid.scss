@@ -1,0 +1,243 @@
+@import "../chameleon/oniui-theme";
+$uiname: "oni-smartgrid";
+.#{$uiname} {
+    font-size: 12px;
+    line-height: 20px;
+    position: relative;
+    opacity: 0;
+    /* IE 8 */
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";
+    /* IE 5-7 */
+    filter: alpha(opacity=0);
+
+    /*三种容器的规则*/
+    .oni-helper-asc, .oni-helper-desc,  .oni-helper-ndb{
+        width:12px;
+        height:12px;
+        line-height: 1;
+        @include inline-block();
+        position: relative;
+        cursor: pointer;
+    }
+    /*三种容器下三角形的共同点*/
+    .oni-helper-asc span, .oni-helper-desc span, .oni-helper-ndb span{
+        position: absolute;
+        top: 0px;
+        left: 4px;
+    }
+    /*上三角*/
+    .oni-helper-ndb .oni-helper-sort-top, .oni-helper-desc .oni-helper-sort-top{
+        @include triangle(top, 12px, half, #ccc);
+        top: 0px;
+        left: 0px;
+    }
+    .oni-helper-asc .oni-helper-sort-top{
+        @include triangle(top, 12px, half, #000);
+        top: 0px;
+        left: 0px;
+    }
+    /*下三角*/
+    .oni-helper-ndb .oni-helper-sort-bottom, .oni-helper-asc .oni-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #ccc);
+        top: 8px;
+        left: 0px;
+    }
+    .oni-helper-desc .oni-helper-sort-bottom{
+        @include triangle(bottom, 12px, half, #000);
+        top: 8px;
+        left: 0px;
+    }
+    .oni-pager {
+        float: right;
+    }
+    input {
+        margin: 0;
+    }
+}
+.#{$uiname}-hide {
+    display: none;
+}
+.#{$uiname}-hover {
+    background-color: #e8f5fd;
+}
+.#{$uiname}-selected {
+    background-color: #fff7e6;
+}
+.#{$uiname}-disabled {
+    color: #ccc;
+    background: #fff;
+    // .oni-dropdown .oni-dropdown-source {
+    //     border-color: #ccc;
+    // }
+}
+.#{$uiname}-hidden input {
+    visibility: hidden;
+}
+.#{$uiname}-main-wrapper {
+    position: relative;
+    overflow-x: auto;
+    _width: 100%;
+    border: 1px solid #e5e5e5;
+}
+.#{$uiname}-header {
+    background-color: #f8f8f8;
+    border-bottom: 1px solid #e5e5e5;
+    zoom: 1;
+    &-fixed{
+        background-color: #f8f8f8;
+        border-top:1px solid #e5e5e5;
+        border-bottom:1px solid #e5e5e5;
+        z-index: 1;
+    }
+}
+
+.#{$uiname}-body-wrapper {
+    overflow-y: auto;
+    zoom: 1;
+    .#{$uiname}-body {
+        background: $ui-widget-content-color;
+        .#{$uiname}-nodata {
+            padding: 23px 0;
+            text-align: center;
+            line-height: 15px;
+        }
+    }
+}
+.#{$uiname}-footer {
+    background-color: #f8f8f8;
+    font-size: 0;
+    border: 1px solid #e5e5e5;
+    border-width: 0 1px;
+    .#{$uiname}-pager-wrapper {
+        width: 100%;
+        padding: 5px 0px;
+        overflow: hidden;
+        border: 1px solid #e5e5e5;
+        border-width: 0 0 1px;
+    }
+}
+.#{$uiname}-row {
+    border-bottom: 1px solid #f3f3f3;
+    font-size: 0;
+}
+.#{$uiname}-column {
+    font-size: 12px;
+    @include inline-block();
+    overflow: hidden;
+    &-cell{
+        padding: 7px 5px;
+        word-wrap: break-word;
+        word-break: normal;
+    }
+}
+.#{$uiname}-pager-options {
+    float: left;
+    height: 26px;
+    line-height: 26px;
+    padding-left: 5px;
+    font-size:12px;
+    .#{$uiname}-showinfo {
+        @include inline-block();
+    }
+    .oni-dropdown {
+        margin: 0 5px;
+    }
+}
+
+/*列设置*/
+.#{$uiname}-handler-wrap{
+    @include inline-block();
+    position: relative;
+    z-index: 1;
+    text-align: left;
+    font-size: 12px;
+    &-right{
+        .#{$uiname}-handler {
+            left: auto;
+            right: 0;
+        }
+    }
+    .#{$uiname}-handler-toggle{
+        width: 24px;
+        height: 24px;
+        border: 1px #ccc solid;
+        border-radius: 2px;
+        cursor: pointer;
+        text-align: center;
+        line-height: 28px;
+        outline: none;
+        background: #f8f8f8 url(http://7xkm02.com1.z0.glb.clouddn.com/smartgridsetting.png) no-repeat center;
+        @include user-select();
+        &-active{
+            border-color: #3775c0;
+        }
+    }
+}
+.#{$uiname}-handler{
+    position: absolute;
+    top: 25px;
+    left: 0;
+    width: 290px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    .#{$uiname}-handler-mode{
+        padding: 9px 10px;
+        line-height: 14px;
+        border-bottom: 1px #f2f2f2 solid;
+        color: #0084bb;
+        .#{$uiname}-handler-mode-item{
+            @include inline-block();
+            margin: 0 10px 0 0;
+            cursor: pointer;
+            @include user-select();
+        }
+        &-active{
+            font-weight: bold;
+        }
+    }
+    .#{$uiname}-handler-list{
+        margin: 0;
+        padding: 9px 10px;
+        list-style: none;
+        overflow: hidden;
+        .oni-smartgrid-handler-name{
+            @include inline-block();
+            max-width: 110px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space:nowrap;
+        }
+        .checkbox{
+            @include inline-block();
+            margin-left: 0;
+            cursor: pointer;
+            *vertical-align: -3px;
+        }
+        &-item{
+            float: left;
+            width: 135px;
+            height: 20px;
+            line-height: 20px;
+            label{
+                @include inline-block();
+                cursor: pointer;
+            }
+        }
+    }
+    .#{$uiname}-handler-ope{
+        padding: 4px 5px;
+        text-align: right;
+        background-color: #f8f8f8;
+        font-size: 0;
+        
+        .oni-button{
+            margin-left:5px;
+        }
+    }
+}
+.#{$uiname}-handler-wrap-right{
+    .#{$uiname}-handler {
+        left: auto;
+        right: 0;
+    }
+}
