@@ -1,0 +1,21 @@
+<li class="oni-state-default oni-menu-item"
+    ms-for="($index,ells) in @data"
+data-repeat-rendered="_rescan"
+ms-class="{oni-state-active:!!@_canActive(menu, $index),oni-state-disabled:menu.disabled,oni-menu-last:$last,
+oni-menu-removable:!!@_canRemove(menu),oni-menu-item-{{_depth}},oni-menu-with-sub oni-menu-with-sub-{{_depth}}:@_hasSubMenu(ells)}"
+ms-hover="oni-state-hover"
+ms-click-101="@_ifEventIsMouseEnter($event, $index)"
+ms-data-sub="@_hasSubMenu(ells)"
+ms-data-depth="@_depth"
+ms-data-index="$index"
+ms-{{MS_OPTION_EVENT}}-100="@activate($event, $index)"
+>
+{{_menuTitle(ells.title, ells, _cutCounter(), cutEnd) | html}}
+<span ms-if="_hasSubMenu(ells)" class="oni-menu-icon">&gt;</span>
+<ul ms-if="_hasSubMenu(ells)" class="oni-menu oni-menu-sub oni-helper-clearfix oni-helper-reset"
+    ms-data-widget-index="$index"
+    ms-class-101="oni-menu-depth-{{_depth+1}}"
+    ms-class-102="oni-helper-hidden:!_canActive(ells, $index)"
+    ms-data-widget="'ells'">
+</ul>
+</li>

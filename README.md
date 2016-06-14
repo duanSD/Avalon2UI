@@ -2,7 +2,7 @@ AVALON2 UI 组件大部分继oniui改造而成。也有部分是自有项目中整理出来。（基于bootst
 
 -----
 
-最新进展   添加了对bootstrap3的依赖。只使用UI组件部分。不会依赖JQ所以不使用它的所有插件。只导入LESS
+最新进展   添加了对bootstrap3.3.6的依赖。只使用UI组件部分。不会依赖JQ所以不使用它的所有插件。只导入LESS
 添加以bootstrap主要是有很多前端兄弟希望avalonUI能免基本于这样式框架来实现。转换avlon1组件转avalon2过程中我顺便就把
 它给整进来。确实oniui的外观不是很容易让人接受。
 
@@ -32,6 +32,7 @@ Avalon2 UI
         -model  //模块样式
     -images   //图片源目录
     +js   //js目录
+        -bootstrapComps  //bootstrap组件目录
         -commponents   //组件源码目录 #这是组件的主要存放目录
         -model    //模块目录
     +view 模块静态html存放目录
@@ -107,3 +108,5 @@ carousel  图片轮播 在样式上还需要做些调整
 page 项目中的分页组件。暂时只实现了单页使用一个组件的功能。没有测试多个组件同时使用的情况
 
 browser 客户端检测
+
+Cookie  cookie功能组件

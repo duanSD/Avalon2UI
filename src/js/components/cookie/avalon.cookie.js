@@ -6,7 +6,7 @@
  *  @updatetime 2011-11-17
  */
 
-define(["avalon"], function() {
+/*define(["avalon"], function() {*/
     function parseCookieValue(s) {
         if (s.indexOf('"') === 0) {
 // This is a quoted cookie as according to RFC2068, unescape...
@@ -131,8 +131,8 @@ define(["avalon"], function() {
 
 
     avalon.cookie = Cookie
-    return avalon
-})
+/*    return avalon
+})*/
 /**
  @links
  [例子1](avalon.cookie.ex1.html)

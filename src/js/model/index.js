@@ -10,14 +10,22 @@ var avalon=require('avalon');
 var button=require("../components/button-test/button");
 var browser=require("../components/browser/avalon.browser");
 var store=require("../components/store/avalon.store");
+require("../components/cookie/avalon.cookie");
 var panel=require("../components/panel-test/panel");
 var uptop=require("../components/uptop/avalon2.uptop");
+var menu=require("../components/menu/avalon2.menu");
 var vm=avalon.define({
 	$id: "test",
 	aaa: "Hello Avalon11  22asawqs2323!",
 	aaaaa:"asdfasdfasdsasfsadfwe"
     ,panelConf:{
         body:'终于走通了。'
+    },
+    menu : {
+        onSelect: function(e, data) {
+            avalon.log(this)
+            avalon.log(data.length)
+        }
     },
     validate: {
         onError: function (reasons) {
@@ -32,6 +40,8 @@ var vm=avalon.define({
                 console.log('全部通过')
             }
         }
-    }
+    },
+    $skipArray : ["menu"]
 })
+
 //增加事件
