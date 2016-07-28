@@ -1,16 +1,21 @@
+AVALON2 UI 组件大部分继oniui改造而成。也有部分是自有项目中整理出来。（基于bootstrap的avavlon2的组件）
 
-B2B
----
-webpack 的工程构建 使用方法
-0. node js 5.10.1 +++
+-----
+
+最新进展   添加了对bootstrap3.3.6的依赖。只使用UI组件部分。不会依赖JQ所以不使用它的所有插件。只导入LESS
+添加以bootstrap主要是有很多前端兄弟希望avalonUI能免基本于这样式框架来实现。转换avlon1组件转avalon2过程中我顺便就把
+它给整进来。确实oniui的外观不是很容易让人接受。
+
+------
+
+Avalon2 UI
+--------------------------------
+初步完成webpack 的工程构建 使用方法
+0. node js 5.10.1
 
 1.npm install
 
 2.node server
-
-生产：
-1.当时前目录运行webpack
-2.运行node proxyServer
 
 ----------------------------------
 初步目录说明：
@@ -27,11 +32,9 @@ webpack 的工程构建 使用方法
         -model  //模块样式
     -images   //图片源目录
     +js   //js目录
-        -lib  //依赖的甩的JS库或插件
-        -useComponents  针对模块使用的非通用性组件
+        -bootstrapComps  //bootstrap组件目录
         -commponents   //组件源码目录 #这是组件的主要存放目录
         -model    //模块目录
-        -util  //放置一些全局配置与静态方法
     +view 模块静态html存放目录
     
 
@@ -61,16 +64,49 @@ package.json里最终的声明依赖如下：
 ```
 
 
-主体模块 可按需require
+完整的源码示例前往<https://github.com/duanSD/Avalon2UI>。
 
-```
-            main:'../lib/avalon/main',//avalon主体功能完整代码
-            //avalon_test:'../../lib/avalon/avalon',
-            avalon:'../lib/avalon/avalon', //纯avalon
-            mmPromise:'../lib/avalon/mmPromise',  //列队模块
-            mmHistory:'../lib/avalon/mmHistory',  //历史记录
-            mmRequest:'../lib/avalon/mmRequest',  // 数据交互模块
-            mmAnimate:'../lib/avalon/mmAnimate',   //动画模块
-            mmRouter:'../lib/avalon/mmRouter',    //路由模块
-            mmState:'../lib/avalon/mmState',     //路由模块 扩展
-```
+<https://github.com/duanSD/Avalon2UI.git>
+
+
+-------------------------------------
+这是一个公开的工程 如果你有好的组件分享，也可以添加进来
+
+现在组件在添加中..... 
+
+有兴趣的可以一起，也可以使用这工程方式去开发各种项目，
+
+这包相对前端来说比较智能。可省去很多架构时间。不仅限于avalon
+
+个人对avalon一出生就跟踪到现在。比较喜欢司图正美的这个作品。
+
+对国人来的使用相对于国外的框架有很多的优势，我不一一说明,
+
+并且现在对 avalon支持的人和公司也越来越多。
+
+并于avalon2我己经在项目中使用了。
+
+看它对原组件库存的支持问题。就想整理一份。
+
+文档和组件会跟着进度一步步添加。
+
+
+现在可用的组件列表：
+-----------------
+store  本地存储
+
+validation 在avalon内置了验证这一块的功能  
+
+mmrequest 请求插件
+
+uptop  返回顶部
+
+md5   RSA  转码加密工个
+
+carousel  图片轮播 在样式上还需要做些调整
+
+page 项目中的分页组件。暂时只实现了单页使用一个组件的功能。没有测试多个组件同时使用的情况
+
+browser 客户端检测
+
+Cookie  cookie功能组件
