@@ -1,7 +1,0 @@
-
-@import "buttons.scss";
-.oni-button{
-    @extend %uibutton;
-    @include bootstrap-button();
-
-}

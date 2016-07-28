@@ -1,4 +1,4 @@
-/*define(["avalon"], function(avalon) {*/
+//define(["avalon"], function(avalon) {
     var pf = (navigator.platform || "").toLowerCase(),
             ua = navigator.userAgent.toLowerCase(),
             s;

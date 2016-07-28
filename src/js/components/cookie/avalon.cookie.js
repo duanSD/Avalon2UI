@@ -6,7 +6,7 @@
  *  @updatetime 2011-11-17
  */
 
-/*define(["avalon"], function() {*/
+//define(["avalon"], function() {
     function parseCookieValue(s) {
         if (s.indexOf('"') === 0) {
 // This is a quoted cookie as according to RFC2068, unescape...

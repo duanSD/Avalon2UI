@@ -226,7 +226,7 @@
                         var dataType = this.options.dataType || this.options.mimeType
                         if (!dataType && this.responseText || this.responseXML) { //如果没有指定dataType，则根据mimeType或Content-Type进行揣测
                             dataType = this.getResponseHeader("Content-Type") || ""
-                            dataType = dataType.match(/json|xml|script|html/i) || ["text"]
+                            dataType = dataType.match(/json|xml|script|html/i) || ["json"]
                             dataType = dataType[0].toLowerCase()
                         }
                         var responseText = this.responseText || '',

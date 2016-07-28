@@ -20,11 +20,19 @@
 		            uploadButtonText: "开始上传",
 					acceptFileTypes: "image.*,*.txt,*.js",
 		            serverConfig: {
-		                url: "../../Handler1.ashx",
+		                url: "http://192.168.3.88:28080/file",
 		                userName: undefined,
 		                password: undefined,
-		                keyGenUrl: "../../getFileKey.ashx"
+		                //keyGenUrl: "../../getFileKey.ashx"
 		            },
+					requiredParamsConfig:{
+						blobParamName: "file",
+						fileTokenParamName: "file",
+			/*			totalChunkParamName: "",
+						chunkIndexParamName: "",*/
+						fileNameParamName: "fileName",
+						blobMd5ParamName: ""
+					},
 					onFileOverSize: function (fileObj) {
 						alert(fileObj.name+"超出了文件尺寸限制")
 					},
@@ -37,7 +45,7 @@
 
                     enableDragDrop: true,
 		            enableRemoteKeyGen: false,
-		            chunked: true,
+		            chunked: false,
 		            chunkSize: 1024*1024
 				};
 			});

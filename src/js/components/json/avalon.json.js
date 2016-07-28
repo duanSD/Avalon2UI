@@ -1,6 +1,7 @@
-define(["avalon"], function(avalon) {
+/*define(["avalon"], function(avalon) {*/
     if (Object.prototype.toString.call(window.JSON) === "[object JSON]") {
-        return window.JSON
+        //return window.JSON
+        module.exports=window.JSON;
     } else {
         var JSON = window.JSON = {fake: true}
         function f(n) {//补零
@@ -167,6 +168,7 @@ define(["avalon"], function(avalon) {
 
             throw new SyntaxError('JSON.parse')
         };
-        return window.JSON
-    }
-})
+        module.exports=window.JSON;
+       // return window.JSON
+    }/*
+})*/

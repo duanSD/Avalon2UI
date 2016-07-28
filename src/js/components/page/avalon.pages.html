@@ -1,9 +1,0 @@
-<div class="page-2 fn-c">
-    <div class="btn-prev" ms-visible="@prevView" ms-on-click="@update($event,'prev')"></div>
-    <ul class="page-list fn-c">
-        <li ms-for="($index,el) in @pageList" ms-class="{on:$index==@selectNum}" ms-on-click="@onNumClick($event,$index)">{{el}}</li>
-    </ul>
-    <div class="btn-next"  ms-visible="@nextView"  ms-on-click="@update($event,'next')"></div>
-    <div class="page-all">共<span ms-text="@totalNum"></span>页</div>
-    <div class="page-go">到<input type="text" ms-duplex-number="@inputValue"  style="width: 30px;">页<span class="btn-go"  style="width: 24px;" ms-on-click="@ongo($event,@inputValue)">GO</span></div>
-</div>

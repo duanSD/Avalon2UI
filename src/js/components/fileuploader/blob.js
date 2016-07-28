@@ -150,7 +150,7 @@ define(["avalon"], function (avalon) {
 	blob.prototype.__html5upload = function (config) {
 		var me = this;
 		var data = this.__extraRequestData(config.paramConfig);
-		data[data.__dataField] = this.fileObj.data.slice(this.offset, this.offset + this.size);
+		data[data.__dataField] = this.fileObj.data;//.slice(this.offset, this.offset + this.size);
 		// 转FormData
         var formData = new FormData();
         for (var i in data) {
@@ -193,10 +193,5 @@ define(["avalon"], function (avalon) {
 			return false;
 		}
 	}
-
-
-
-
-
 	return blob;
 });

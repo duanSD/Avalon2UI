@@ -11,7 +11,6 @@
  * 		</code>
  *
   */
-var avalon=require('../../lib/avalon/avalon');
     var rotateLeft = function(lValue, iShiftBits) {
         return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
     }
