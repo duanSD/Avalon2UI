@@ -1,0 +1,10 @@
+<span ms-visible="@toggle">
+    <span class="system-tip-zzc d-i" ms-css="[{height:@maskHeight}]"></span>
+    <span class="system-tip-text d-i">
+        <span class="system-tip-text-top d-i t-c">
+            <span ms-text="@title"></span>
+            <b class="d-i" ms-click="@close"></b>
+        </span>
+        <slot name="body"></slot>
+    </span>
+</span>

@@ -1,0 +1,30 @@
+<div class="ui-header">
+    <div class="content fn-c">
+        <a href="index.html"><h1 class="icon logo">淘猪宝</h1></a>
+        <ul class="nav-header">
+            <li><a ms-class="{on:@selectNav==1}" href="shopIndex.html">店铺</a></li>
+            <li><a ms-class="{on:@selectNav==2}" ms-class="{on:@selectNav==1}" href="selling.html">商品</a></li>
+            <li><a ms-class="{on:@selectNav==3}" href="daifukuan-1.2.html">订单</a></li>
+            <li><a ms-class="{on:@selectNav==4}" href="wechat.account.html">微信</a></li>
+            <li><a ms-class="{on:@selectNav==5}" href="seo.index.html">营销</a></li>
+            <li><a ms-class="{on:@selectNav==6}" href="client.fans.html">客户</a></li>
+            <li><a ms-class="{on:@selectNav==7}" href="data.index.html">数据</a></li>
+            <li><a ms-class="{on:@selectNav==8}" href="fx-gaikuang-1.2.html">分销</a></li>
+        </ul>
+        <div class="account-header">
+            <div class="head-login" id="head-login">
+                <a href="account/login.html" title="登录">登录</a><a href="account/register.html" title="注册">注册</a>
+            </div>
+            <div class="head-user">
+                <p class="shop-name" ms-text="@userName"></p>
+                <div class="set">设置<i></i>
+                    <div class="set-data">
+                        <!--<a href="shop.setup.html?nav=shop&menu=setup" title="店铺设置">店铺设置</a>-->
+                        <a href="accounts_a.html" title="帐号设置">帐号设置</a>
+                        <a href="javascript:;" title="退出" ms-click="@logout">退出</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

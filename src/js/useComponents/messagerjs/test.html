@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body><iframe id="iframe1" src="http://127.0.0.1:8088/src/js/useComponents/messagerjs/messager.html"></iframe>
+<script src="./messagerjs.js"></script>
+<script>
+    document.domain='127.0.0.1'
+    // 父窗口中 - 初始化Messenger对象
+    // 推荐指定项目名称, 避免Mashup类应用中, 多个开发商之间的冲突
+    var messenger = new Messenger('Parent', 'uploadFileForm');
+    // 父窗口中 - 添加消息对象, 明确告诉父窗口iframe的window引用与名字
+    var iframe1=document.getElementById('iframe1')
+    messenger.addTarget(iframe1.contentWindow, 'iframe1');
+    messenger.targets['iframe1'].send('sadfasdfasdf');
+    messenger.listen(function(msg){
+        alert("收到消息: " + msg);
+    });
+</script>
+
+</body>
+</html>

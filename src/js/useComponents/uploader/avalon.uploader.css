@@ -1,0 +1,109 @@
+.clr{clear: both}
+.images-body{
+    padding: 20px;
+}
+.images-body-c{
+    display: inline-block;
+    float: left;
+    width: 170px;
+    height: 170px;
+}
+.images-body-s1{
+    width: 100%;
+    height: 100%;
+    display: inline-block;
+    line-height: 170px;
+}
+.images-body-d{
+    width: 80%;
+    display: inline-block;
+    float: left;
+}
+.images-body-d ul{
+    display: inline-block;
+    width: 100%;
+}
+.images-body-d ul li{
+    display: inline-block;
+    float: left;
+    list-style: none;
+    border: 1px dashed #e5e5e5;
+    border-radius: 2px;
+    height: 170px;
+    width: 170px;
+    margin: 0 10px 10px 0;
+    position: relative;
+}
+.zt{
+    display: inline-block;
+    width: 63px;
+    height: 63px;
+    background-image:url("zt.png") ;
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 99;
+}
+.images-body-d ul li img{
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+}
+
+
+
+.images-guize{
+    display: inline-block;
+    width: 80%;
+    height: 30px;
+    font-size: 14px;
+    margin-left: 40px;
+}
+.images-guize b{color: #d23138;}
+.move-sz{
+    display: inline-block;
+    width: 34px;
+    height: 34px;
+    background-image: url("shiz.png");
+    background-position: 0 0;
+    background-repeat: no-repeat;
+    margin: 40px 68px 10px 68px;
+    cursor: pointer;
+}
+.move-show,.move-action{
+    display: inline-block;
+    font-size: 12px;
+    color: #999;
+    width: 100%;
+    text-align: center;
+}
+.images-active:hover{
+    background: #d23138;
+    cursor: pointer;
+}
+.images-active:hover .move-show,.images-active:hover .move-action{
+    color: #fff;
+}
+.images-opa{
+    width: 100%;
+    height: 40px;
+    position: absolute;
+    left: 0;
+    bottom: -18px;
+    background: #000;
+    opacity: 0.7;
+    filter: progid:DXImageTransform.Microsoft.Alpha(opacity=70);
+}
+.images-opa span{
+    display: inline-block;
+    float: left;
+    width: 33%;
+    line-height: 40px;
+    color: #fff;
+    font-weight: bold;
+    text-align: center;
+    cursor: pointer;
+    font-size: 12px;
+}

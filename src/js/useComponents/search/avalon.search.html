@@ -1,0 +1,126 @@
+<div class="boss-shop-search fn-c">
+    <input  ms-duplex-string="@searchValue" type="text"/>
+    <input ms-click="@Submit()" id="searchBtnID" type="button"  value="搜索"/>
+    <div class="warehouse-choice">
+        <ul>
+        <li style="width: 50px;border: none">筛选：</li>
+        <li ms-visible="@role==0||@role==2" ms-click="@onselectPClass(0,$event)"  ms-on-mouseleave="@onselectPClass(0,$event)" style="cursor:pointer"><i class="dandenga">{{@data[0]}}</i>
+            <span></span>
+            <p ms-visible="@seltID==0" class="danteng">
+                <ul class="newAdd-ul-3" style="border-bottom: none">
+                    <li ><input ms-duplex="@tagInput" ms-keyup="@tagInputCall('data0',$event)" type="input"/></li>
+                </ul>
+                <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                    <li ms-for="el in @data0['arr']"  ms-click="@onselectClass($event,el,0)|stop" ms-text="el.sso_shopName"></li>
+                </ul>
+                <ul ms-visible="@viewList==1" class="newAdd-ul-2"  style="overflow-y:scroll">
+                    <li ms-for="el in @data0['pipe']"  ms-click="@onselectClass($event,el,0)|stop" ms-text="el.sso_shopName"></li>
+                </ul>
+            </p>
+        </li>
+    </ul>
+        <ul>
+            <li ms-click="@onselectPClass(1,$event)|stop"   ms-on-mouseleave="@onselectPClass(1,$event)"  style="cursor:pointer;"><i class="dandenga">{{@data[1]}}</i>
+                <span></span>
+                <p ms-visible="(@seltID==1)" class="danteng">
+                    <ul class="newAdd-ul-3" style="border-bottom: none">
+                        <li><input ms-duplex="@tagInput" ms-keyup="@tagInputCall('data1',$event)" type="input"/></li>
+                    </ul>
+                    <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data1['arr']"  ms-click="@onselectClass($event,el,1)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                    <ul ms-visible="@viewList==1" class="newAdd-ul-2" style="overflow-y:scroll;">
+                        <li ms-for="($index,el) in @data1['pipe']"  ms-click="@onselectClass($event,el,1)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                </p>
+            </li>
+            <li ms-visible="@data2['arr'].length!=0" ms-click="@onselectPClass(2,$event)|stop"   ms-on-mouseleave="@onselectPClass(2,$event)" style="cursor:pointer"><i class="dandenga">{{@data[2]}}</i>
+                <span></span>
+                <p ms-visible="@seltID==2" class="danteng">
+                    <ul class="newAdd-ul-3" style="border-bottom: none">
+                        <li><input ms-duplex-string="@tagInput" ms-keyup="@tagInputCall('data2',$event)" type="input"/></li>
+                    </ul>
+                    <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data2['arr']"  ms-click="@onselectClass($event,el,2)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                    <ul ms-visible="@viewList==1" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data2['pipe']"  ms-click="@onselectClass($event,el,2)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                </p>
+            </li>
+            <li ms-visible="@data3['arr'].length!=0" ms-click="@onselectPClass(3,$event)|stop"   ms-on-mouseleave="@onselectPClass(3,$event)" style="cursor:pointer"><i class="dandenga">{{@data[3]}}</i>
+                <span></span>
+                <p ms-visible="@seltID==3" class="danteng">
+                    <ul class="newAdd-ul-3" style="border-bottom: none">
+                        <li><input ms-duplex-string="@tagInput" ms-keyup="@tagInputCall('data2',$event)" type="input"/></li>
+                    </ul>
+                    <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data3['arr']"  ms-click="@onselectClass($event,el,3)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                    <ul ms-visible="@viewList==1" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data3['pipe']"  ms-click="@onselectClass($event,el,3)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                </p>
+            </li>
+            <li ms-visible="@data4['arr'].length!=0" ms-click="@onselectPClass(4,$event)|stop"   ms-on-mouseleave="@onselectPClass(4,$event)" style="cursor:pointer"><i class="dandenga">{{@data[4]}}</i>
+                <span></span>
+                <p ms-visible="@seltID==4" class="danteng">
+                    <ul class="newAdd-ul-3" style="border-bottom: none">
+                        <li><input ms-duplex-string="@tagInput" ms-keyup="@tagInputCall('data4',$event)" type="input"/></li>
+                    </ul>
+                    <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data4['arr']"  ms-click="@onselectClass($event,el,4)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                    <ul ms-visible="@viewList==1" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data4['pipe']"  ms-click="@onselectClass($event,el,4)|stop" ms-text="el.clazzname"></li>
+                    </ul>
+                </p>
+            </li>
+            <li  ms-visible="@data5['arr'].length!=0" ms-click="@onselectPClass(5,$event)|stop"    ms-on-mouseleave="@onselectPClass(5,$event)" style="cursor:pointer"><i class="dandenga">{{@data[5]}}</i>
+                <span></span>
+                <p ms-visible="@seltID==5" class="danteng">
+                    <ul class="newAdd-ul-3" style="border-bottom: none">
+                        <li><input ms-duplex-string="@tagInput" ms-keyup="@tagInputCall('data5',$event)" type="input"/></li>
+                    </ul>
+                    <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data5['arr']"  ms-click="@onselectClass($event,el,5)|stop" ms-text="el.gd_styleName"></li>
+                    </ul>
+                    <ul ms-visible="@viewList==1" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data5['pipe']"  ms-click="@onselectClass($event,el,5)|stop" ms-text="el.gd_styleName"></li>
+                    </ul>
+                </p>
+            </li>
+        </ul>
+
+        <ul>
+            <li ms-click="@onselectPClass(6,$event)|stop" style="cursor:pointer"    ms-on-mouseleave="@onselectPClass(6,$event)"><i class="dandenga">{{@data[6]}}</i>
+                <span></span>
+                <p ms-visible="@seltID==6" class="danteng">
+                    <ul class="newAdd-ul-3" style="border-bottom: none">
+                        <li><input ms-duplex-string="@tagInput" ms-keyup="@tagInputCall('data6',$event)" type="input"/></li>
+                    </ul>
+                    <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data6['arr']"  ms-click="@onselectClass($event,el,6)|stop" ms-text="el.bd_bdChnName"></li>
+                    </ul>
+                    <ul ms-visible="@viewList==1" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data6['pipe']"  ms-click="@onselectClass($event,el,6)|stop" ms-text="el.bd_bdChnName"></li>
+                    </ul>
+                </p>
+            </li>
+            <li ms-click="@onselectPClass(7,$event)|stop"    ms-on-mouseleave="@onselectPClass(7,$event)" style="cursor:pointer"><i class="dandenga">{{@data[7]}}</i>
+                <span></span>
+                <p ms-visible="(@seltID==7)" class="danteng">
+                    <ul class="newAdd-ul-3" style="border-bottom: none">
+                        <li><input ms-duplex-string="@tagInput" ms-keyup="@tagInputCall('data7',$event)" type="input"/></li>
+                    </ul>
+                    <ul ms-visible="@viewList==0" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data7['arr']"  ms-click="@onselectClass($event,el,7)|stop" ms-text="el.labelname"></li>
+                    </ul>
+                    <ul ms-visible="@viewList==1" class="newAdd-ul-2"  style="overflow-y:scroll">
+                        <li ms-for="($index,el) in @data7['pipe']"  ms-click="@onselectClass($event,el,7)|stop" ms-text="el.labelname"></li>
+                    </ul>
+                </p>
+            </li>
+        </ul>
+    </div>
+</div>
