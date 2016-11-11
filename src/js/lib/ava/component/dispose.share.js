@@ -28,15 +28,17 @@ function fireDisposeHook(el) {
             detachEvents(v)
             if (v) {
                 v[0][is + '-mount'] = false
+                v[0]['component-ready:' + is] = false
             }
         }
         return false
     }
 }
+var rtag = /^\w/
 function detachEvents(arr) {
     for (var i in arr) {
         var el = arr[i]
-        if (el.nodeType === 1) {
+        if (rtag.test(el.nodeName)) {
             for (var i in el) {
                 if (i.indexOf('ms-on') === 0) {
                     delete el[i]
@@ -61,5 +63,5 @@ function fireDisposeHooks(nodes) {
 module.exports = {
     fireDisposeHookDelay: fireDisposeHookDelay,
     fireDisposeHooks: fireDisposeHooks,
-    fireDisposeHook:fireDisposeHook
+    fireDisposeHook: fireDisposeHook
 }

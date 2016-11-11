@@ -1,0 +1,25 @@
+<div>
+<span ms-visible="@tgle">
+    <span class="system-tip-zzc" ms-css="{zIndex:@zIndex,height:@mask}"></span>
+    <span class="system-tip-zzc_body"  ms-css="{zIndex:@zIndex,height:@height,width:@width}">
+        <span class="headTitle" ms-text="@headTitle"></span>
+        <a class="system-tip-zzc_body_close" ms-click="@close"></a>
+        <span ms-if="@titlebool" class="titleStyle" ms-class="{title_ok:@titleType==1,title_msg:@titleType==2,title_err:@titleType==3}">
+            <span class="iconImg"></span>
+            <span class="title_con" ms-text="@titleCon"></span>
+        </span>
+        <span  class="dialogBody"><slot name="body"></slot></span>
+        <span class="body_btn" ms-visible="@buttonType==1">
+            <span>
+                <input type="button" class="body_btn_button body_btn_button_1" value="确定"  ms-click="@submitOk">&nbsp;&nbsp;&nbsp;
+                <input type="button" class="body_btn_button body_btn_button_2" value="取消"  ms-click="@close">
+            </span>
+        </span>
+        <span class="body_btn_one" ms-visible="@buttonType==2">
+            <span>
+                <input type="button" class="myselfButton" ms-attr="{value:@buttonValue}" ms-click="@submitOk" />
+            </span>
+        </span>
+    </span>
+</span>
+</div>

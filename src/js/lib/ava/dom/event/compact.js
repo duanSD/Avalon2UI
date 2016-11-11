@@ -1,6 +1,8 @@
+var avalon = require('../../seed/core')
 var document = avalon.document
-var window = avalon.window
 var root = avalon.root
+var window = avalon.window
+
 var W3C = avalon.modern
 
 var getShortID = require('../../seed/lang.share').getShortID
@@ -22,7 +24,10 @@ avalon.bind = function (elem, type, fn) {
         //如果是使用bind方法绑定的回调,其uuid格式为_12
         var uuid = getShortID(fn)
         var hook = eventHooks[type]
-        if(hook){
+        if(type === 'click' && avalon.modern && document.ontouchstart){
+            elem.addEventListener('click',avalon.noop)
+        }
+        if (hook) {
             type = hook.type || type
             if (hook.fix) {
                 fn = hook.fix(elem, fn)
@@ -87,7 +92,7 @@ function collectHandlers(elem, type, handlers) {
     var value = elem.getAttribute('avalon-events')
     if (value && (elem.disabled !== true || type !== 'click')) {
         var uuids = []
-        var reg = typeRegExp[type] || (typeRegExp[type] = new RegExp("\\b"+type + '\\:([^,\\s]+)', 'g'))
+        var reg = typeRegExp[type] || (typeRegExp[type] = new RegExp("\\b" + type + '\\:([^,\\s]+)', 'g'))
         value.replace(reg, function (a, b) {
             uuids.push(b)
             return a
@@ -107,6 +112,7 @@ function collectHandlers(elem, type, handlers) {
 
 }
 var rhandleHasVm = /^e/
+var stopImmediate = false
 function dispatch(event) {
     event = new avEvent(event)
     var type = event.type
@@ -117,19 +123,21 @@ function dispatch(event) {
     while ((handler = handlers[i++]) && !event.cancelBubble) {
         var host = event.currentTarget = handler.elem
         j = 0
-        while ((uuid = handler.uuids[ j++ ]) &&
-                !event.isImmediatePropagationStopped) {
-            
+        while ((uuid = handler.uuids[ j++ ])) {
+            if (stopImmediate) {
+                stopImmediate = false
+                break
+            }
             var fn = avalon.eventListeners[uuid]
             if (fn) {
                 var vm = rhandleHasVm.test(uuid) ? handler.elem._ms_context_ : 0
                 if (vm && vm.$hashcode === false) {
                     return avalon.unbind(elem, type, fn)
                 }
-   
+
                 var ret = fn.call(vm || elem, event, host._ms_local)
-                
-                if(ret === false){
+
+                if (ret === false) {
                     event.preventDefault()
                     event.stopPropagation()
                 }
@@ -164,12 +172,12 @@ function delegateEvent(type) {
 }
 
 avalon.fireDom = function (elem, type, opts) {
+     /* istanbul ignore else */
     if (document.createEvent) {
         var hackEvent = document.createEvent('Events')
         hackEvent.initEvent(type, true, true, opts)
         avalon.shadowCopy(hackEvent, opts)
-
-        elem.dispatchEvent(hackEvent)
+        elem.dispatchEvent(hackEvent)  
     } else if (root.contains(elem)) {//IE6-8触发事件必须保证在DOM树中,否则报'SCRIPT16389: 未指明的错误'
         hackEvent = document.createEventObject()
         avalon.shadowCopy(hackEvent, opts)
@@ -192,6 +200,8 @@ function avEvent(event) {
         this.target = event.srcElement
     }
     var target = this.target
+    /* istanbul ignore if */
+    /* istanbul ignore else */
     if (this.which == null && event.type.indexOf('key') === 0) {
         this.which = event.charCode != null ? event.charCode : event.keyCode
     } else if (rmouseEvent.test(event.type) && !('pageX' in this)) {
@@ -207,36 +217,30 @@ function avEvent(event) {
 }
 avEvent.prototype = {
     preventDefault: function () {
-        var e = this.originalEvent
-        this.returnValue = false
-        if (e) {
-            e.returnValue = false
-            if (e.preventDefault) {
-                e.preventDefault()
-            }
+        var e = this.originalEvent || {}
+        e.returnValue = this.returnValue = false
+        if (e.preventDefault) {
+            e.preventDefault()
         }
     },
     stopPropagation: function () {
-        var e = this.originalEvent
-        this.cancelBubble = true
-        if (e) {
-            e.cancelBubble = true
-            if (e.stopPropagation) {
-                e.stopPropagation()
-            }
+        var e = this.originalEvent || {}
+        e.cancelBubble = this.cancelBubble = true
+        if (e.stopPropagation) {
+            e.stopPropagation()
         }
     },
     stopImmediatePropagation: function () {
-        var e = this.originalEvent
-        this.isImmediatePropagationStopped = true
-        if (e.stopImmediatePropagation) {
-            e.stopImmediatePropagation()
-        }
+        stopImmediate = true;
         this.stopPropagation()
+    },
+    toString: function () {
+        return '[object Event]'//#1619
     }
 }
 
 //针对firefox, chrome修正mouseenter, mouseleave
+/* istanbul ignore if */
 if (!('onmouseenter' in root)) {
     avalon.each({
         mouseenter: 'mouseover',
@@ -269,6 +273,7 @@ avalon.each({
     }
 })
 //针对IE6-8修正input
+/* istanbul ignore if */
 if (!('oninput' in document.createElement('input'))) {
     eventHooks.input = {
         type: 'propertychange',
@@ -282,6 +287,7 @@ if (!('oninput' in document.createElement('input'))) {
         }
     }
 }
+/* istanbul ignore if */
 if (document.onmousewheel === void 0) {
     /* IE6-11 chrome mousewheel wheelDetla 下 -120 上 120
      firefox DOMMouseScroll detail 下3 上-3

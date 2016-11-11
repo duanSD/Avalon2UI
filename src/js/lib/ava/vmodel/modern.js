@@ -120,37 +120,44 @@ function mediatorFactory(before, after) {
     var accessors = {}
     var unresolve = {}
     var heirloom = {}
-    var $skipArray ={}
+    var $skipArray = {}
     var arr = avalon.slice(arguments)
     var config
     var configName
+    var isWidget = typeof this === 'function' && this.isWidget
     for (var i = 0; i < arr.length; i++) {
         var obj = arr[i]
         //收集所有键值对及访问器属性
         for (var key in obj) {
-         
-            keys[key] = obj[key]
-            
-            if(key === '$skipArray' && Array.isArray(obj.$skipArray)){
-                obj.$skipArray.forEach(function(el){
-                    $skipArray[el] = 1
-                })
+            var cur = obj[key]
+            if (key === '$skipArray') {
+                if (Array.isArray(cur)) {
+                    cur.forEach(function (el) {
+                        $skipArray[el] = 1
+                    })
+                }
+                continue
+            }
+            if (isWidget && arr.indexOf(cur) !== -1) {//处理配置对象
+                config = cur
+                configName = key
+                continue
             }
             var accessor = Object.getOwnPropertyDescriptor(obj, key)
+
+            keys[key] = cur
+
+            if (accessors[key] && avalon.isObject(cur)) {//处理子vm
+                delete accessors[key]
+            }
             if (accessor.set) {
-                if (arr.indexOf(obj[key]) === -1) {
-                    accessors[key] = accessor
-                } else { //去掉vm那个配置对象
-                    config = keys[key]
-                    configName = key
-                    delete keys[key]
-                }
+                accessors[key] = accessor
             } else if (typeof keys[key] !== 'function') {
                 unresolve[key] = 1
             }
         }
     }
-    if(typeof this === 'function'){
+    if (typeof this === 'function') {
         this(keys, unresolve)
     }
     for (key in unresolve) {
@@ -169,12 +176,12 @@ function mediatorFactory(before, after) {
         if (!accessors[key]) {//添加不可监控的属性
             $vmodel[key] = keys[key]
         }
-        if (configName && accessors[key] && config.hasOwnProperty(key)) {
-            var $$ = accessors[key]
-            if (!$$.get.$decompose) {
-                $$.get.$decompose = {}
+        if (isWidget && config && accessors[key] && config.hasOwnProperty(key)) {
+            var GET = accessors[key].get
+            if (!GET.$decompose) {
+                GET.$decompose = {}
             }
-            $$.get.$decompose[configName+'.'+key] = $vmodel
+            GET.$decompose[configName + '.' + key] = $vmodel
         }
         keys[key] = true
     }
@@ -236,7 +243,7 @@ __method__.forEach(function (method) {
             var args = [a, b]
             for (var j = 0, jn = neo.length; j < jn; j++) {
                 var item = old[j]
-                args[j + 2] = modelAdaptor(neo[j], item, (item && item.$events||{}), {
+                args[j + 2] = modelAdaptor(neo[j], item, (item && item.$events || {}), {
                     id: this.$id + '.*',
                     master: true
                 })

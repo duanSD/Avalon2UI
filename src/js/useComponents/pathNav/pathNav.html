@@ -1,0 +1,7 @@
+<ol class="breadcrumb">
+    <li ms-for="el in @navList" ms-class="{active:el.active}">
+        <a href="javascript:;" ms-if="!el.active" ms-text="el.title" ms-click="@navClick(el)"></a>
+        <span ms-if="el.active"  ms-text="el.title"></span>
+    </li>
+   <button ms-click="@refreshClick(el)" class="btn btn-primary btn-xs" style="float: right;"><span class="glyphicon glyphicon-refresh"  ></span></button>
+</ol>

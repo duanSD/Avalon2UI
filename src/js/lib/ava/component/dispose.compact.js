@@ -48,15 +48,19 @@ function byRewritePrototype() {
         oldSetter.call(this, html)
         fireDisposeHooks(all)
     }
-    if (!Object.getOwnPropertyDescriptor) {
-        oldSetter = ep.__lookupSetter__('innerHTML')
-        ep.__defineSetter__('innerHTML', newSetter)
-    } else {
-        var obj = Object.getOwnPropertyDescriptor(ep, 'innerHTML');
-        if(obj){
-            oldSetter = obj.set
-            obj.set = newSetter
-            Object.defineProperty(ep, 'innerHTML', obj)
+    try {
+        var obj = Object.getOwnPropertyDescriptor(ep, 'innerHTML')
+        var oldSetter = obj.set
+        obj.set = newSetter
+        Object.defineProperty(ep, 'innerHTML', obj)
+    } catch (e) {
+        //safari 9.1.2使用Object.defineProperty重写innerHTML会抛
+        // Attempting to change the setter of an unconfigurable property.
+        if (ep && ep.__lookupSetter__) {
+            oldSetter = ep.__lookupSetter__('innerHTML')
+            ep.__defineSetter__('innerHTML', newSetter)
+        } else {
+            throw e
         }
     }
 
@@ -100,13 +104,19 @@ function byPolling(dom) {
 }
 
 
-module.exports = function onComponentDispose(dom) {
+function fn(dom) {
     if (window.chrome && window.MutationEvent) {
         byMutationEvent(dom)
-    } else if (avalon.modern && typeof window.Node === 'function') {
-        byRewritePrototype(dom)
     } else {
-        byPolling(dom)
+        try {
+            byRewritePrototype(dom)
+        } catch (e) {
+            byPolling(dom)
+        }
     }
 }
+fn.byMutationEvent = byMutationEvent
+fn.byRewritePrototype = byRewritePrototype
+fn.byPolling = byPolling
 
+module.exports = fn

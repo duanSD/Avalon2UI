@@ -1,6 +1,6 @@
    var tmpl = require('./avalon.fxTopSearch.html')
     avalon.component('ms-fxTopSearch', {
-        template: tpl,
+        template: tmpl,
         defaults: {
             pageName:'',
             condition:'',

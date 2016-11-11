@@ -47,8 +47,7 @@ function parseExpr(str, category) {
         binding = str
         str = binding.expr
     }
-    if (typeof str !== 'string')
-        return ''
+   
     var cacheID = str
     var cacheStr = evaluatorPool.get(category + ':' + cacheID)
 
@@ -71,8 +70,7 @@ function parseExpr(str, category) {
 
     var input = str.replace(rregexp, dig).//移除所有正则
             replace(rstring, dig).//移除所有字符串
-            
-   // input = avalon.unescapeHTML(input).
+
             replace(rshortCircuit, dig).//移除所有短路或
             replace(ruselessSp, '$1').//移除. |两端空白
             split(rpipeline) //使用管道符分离所有过滤器及表达式的正体
@@ -85,14 +83,13 @@ function parseExpr(str, category) {
     }
 
     body = body.replace(rAt, '$1__vmodel__.')
-    if (category === 'js') {
-        return evaluatorPool.put(category + ':' + cacheID, body)
-    } else if (category === 'on') {
+    /* istanbul ignore else  */
+    if (category === 'on') {
         collectLocal(_body, local)
+    } else  if (category === 'js') {
+        return evaluatorPool.put(category + ':' + cacheID, body)
     }
-
-//处理表达式的过滤器部分
-
+    //处理表达式的过滤器部分
     var filters = input.map(function (str) {
         collectLocal(str.replace(/^\w+/g, ""), local)
         str = str.replace(rfill, fill).replace(rAt, '$1__vmodel__.') //还原
@@ -117,13 +114,14 @@ function parseExpr(str, category) {
         if (filters.length) {
             filters.push('if($event.$return){\n\treturn;\n}')
         }
+        /* istanbul ignore if  */
         if (!avalon.modern) {
             body = body.replace(/__vmodel__\.([^(]+)\(([^)]*)\)/, function (a, b, c) {
                 return '__vmodel__.' + b + ".call(__vmodel__" + (/\S/.test(c) ? ',' + c : "") + ")"
             })
         }
 
-        ret = ['function ms_on($event, __local__){',
+        ret = ['function ($event, __local__){',
             'try{',
             extLocal(local).join('\n'),
             '\tvar __vmodel__ = this;',
@@ -135,16 +133,6 @@ function parseExpr(str, category) {
         filters.unshift(2, 0)
     } else if (category === 'duplex') {
 
-//从vm中得到当前属性的值
-        var getterBody = [
-            'function (__vmodel__){',
-            'try{',
-            'return ' + body + '\n',
-            '}catch(e){',
-            quoteError(str, category).replace('parse', 'get'),
-            '}',
-            '}']
-        evaluatorPool.put('duplex:' + cacheID, getterBody.join('\n'))
         //给vm同步某个属性
         var setterBody = [
             'function (__vmodel__,__value__){',
@@ -156,19 +144,20 @@ function parseExpr(str, category) {
             '}']
         evaluatorPool.put('duplex:set:' + cacheID, setterBody.join('\n'))
         //对某个值进行格式化
-        if (input.length) {
-            var formatBody = [
-                'function (__vmodel__, __value__){',
-                'try{',
-                filters.join('\n'),
-                'return __value__\n',
-                '}catch(e){',
-                quoteError(str, category).replace('parse', 'format'),
-                '}',
-                '}']
-            evaluatorPool.put('duplex:format:' + cacheID, formatBody.join('\n'))
-        }
-        return  evaluatorPool.get('duplex:' + cacheID)
+
+        var getterBody = [
+            'function (__vmodel__){',
+            'try{',
+            'var __value__ = ' + body + '\n',
+            filters.join('\n'),
+            'return __value__\n',
+            '}catch(e){',
+            quoteError(str, category).replace('parse', 'get'),
+            '}',
+            '}'].join('\n')
+        evaluatorPool.put('duplex:get:' + cacheID, getterBody)
+
+        return  getterBody
     } else {
         ret = [
             '(function(){',
@@ -197,7 +186,6 @@ function quoteError(str, type) {
             avalon.quote('parse ' + type + ' binding【 ' + str + ' 】fail')
             + ')'
 }
-
 module.exports = avalon.parseExpr = parseExpr
 
 

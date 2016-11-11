@@ -3,17 +3,11 @@ function avalon(el) {
     return new avalon.init(el)
 }
 
-global.avalon = avalon
-if(typeof window !== 'undefined'){
-    window.avalon = avalon
-}
-
 avalon.init = function (el) {
     this[0] = this.element = el
 }
 
 avalon.fn = avalon.prototype = avalon.init.prototype
-
 
 avalon.shadowCopy = function (destination, source) {
     for (var property in source) {
@@ -24,11 +18,12 @@ avalon.shadowCopy = function (destination, source) {
 
 var rword = /[^, ]+/g
 
-var hasConsole = global.console
+var hasConsole = typeof console === 'object'
 
 avalon.shadowCopy(avalon, {
     noop: function () {
     },
+    version: "2.1.16",
     //切割字符串为一个个小块，以空格或逗号分开它们，结合replace实现字符串的forEach
     rword: rword,
     inspect: ({}).toString,
@@ -40,6 +35,7 @@ avalon.shadowCopy(avalon, {
         }
     },
     warn: function () {
+        /* istanbul ignore if*/
         if (hasConsole && avalon.config.debug) {
             var method = console.warn || console.log
             // http://qiang106.iteye.com/blog/1721425
@@ -51,8 +47,9 @@ avalon.shadowCopy(avalon, {
     },
     //将一个以空格或逗号隔开的字符串或数组,转换成一个键值都为1的对象
     oneObject: function (array, val) {
+        /* istanbul ignore if*/
         if (typeof array === 'string') {
-            array = array.match(rword) || []
+            array = array.match(rword) ||[]
         }
         var result = {},
                 value = val !== void 0 ? val : 1
@@ -65,3 +62,4 @@ avalon.shadowCopy(avalon, {
 })
 
 module.exports = avalon
+

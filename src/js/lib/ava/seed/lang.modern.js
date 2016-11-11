@@ -1,10 +1,9 @@
 //这里放置存在异议的方法
-
-var serialize = avalon.inspect
+var avalon = require('./core')
+var tos = avalon.inspect
 var rwindow = /^\[object (?:Window|DOMWindow|global)\]$/
 var rarraylike = /(Array|List|Collection|Map|Arguments)\]$/
 
-avalon.quote = JSON.stringify
 
 // avalon.type
 var class2type = {}
@@ -18,9 +17,11 @@ avalon.type = function (obj) { //取得目标的类型
     }
     // 早期的webkit内核浏览器实现了已废弃的ecma262v4标准，可以将正则字面量当作函数使用，因此typeof在判定正则时会返回function
     return typeof obj === 'object' || typeof obj === 'function' ?
-            class2type[serialize.call(obj)] || 'object' :
+            class2type[tos.call(obj)] || 'object' :
             typeof obj
 }
+
+avalon.quote = JSON.stringify
 
 
 avalon.isFunction = function (fn) {
@@ -28,14 +29,14 @@ avalon.isFunction = function (fn) {
 }
 
 avalon.isWindow = function (obj) {
-    return rwindow.test(serialize.call(obj))
+    return rwindow.test(tos.call(obj))
 }
 
 
 /*判定是否是一个朴素的javascript对象（Object），不是DOM对象，不是BOM对象，不是自定义类的实例*/
 avalon.isPlainObject = function (obj) {
     // 简单的 typeof obj === 'object'检测，会致使用isPlainObject(window)在opera下通不过
-    return serialize.call(obj) === '[object Object]' &&
+    return tos.call(obj) === '[object Object]' &&
             Object.getPrototypeOf(obj) === Object.prototype
 }
 
@@ -102,9 +103,10 @@ avalon.mix = avalon.fn.mix = function () {
 
 /*判定是否类数组，如节点集合，纯数组，arguments与拥有非负整数的length属性的纯JS对象*/
 function isArrayLike(obj) {
+    /* istanbul ignore if*/
     if (obj && typeof obj === 'object') {
         var n = obj.length,
-                str = serialize.call(obj)
+                str = tos.call(obj)
         if (rarraylike.test(str)) {
             return true
         } else if (str === '[object Object]' && n === (n >>> 0)) {
@@ -132,6 +134,21 @@ avalon.each = function (obj, fn) {
         }
     }
 }
+
+/*new function welcome() {
+    var welcomeIntro = ["%cavalon.js %c" + avalon.version + " %cin debug mode, %cmore...", "color: rgb(114, 157, 52); font-weight: normal;", "color: rgb(85, 85, 85); font-weight: normal;", "color: rgb(85, 85, 85); font-weight: normal;", "color: rgb(82, 140, 224); font-weight: normal; text-decoration: underline;"];
+    var welcomeMessage = "You're running avalon in debug mode - messages will be printed to the console to help you fix problems and optimise your application.\n\n" +
+            'To disable debug mode, add this line at the start of your app:\n\n  avalon.config({debug: false});\n\n' +
+            'Debug mode also automatically shut down amicably when your app is minified.\n\n' +
+            "Get help and support:\n  https://segmentfault.com/t/avalon\n  http://avalonjs.coding.me/\n  http://www.avalon.org.cn/\n\nFound a bug? Raise an issue:\n  https://github.com/RubyLouvre/avalon/issues\n\n";
+
+    var hasGroup = !!console.groupCollapsed 
+    console[hasGroup ? 'groupCollapsed': 'log'].apply(console, welcomeIntro)
+    console.log(welcomeMessage)
+    if (hasGroup) {
+        console.groupEnd(welcomeIntro);
+    }
+}*/
 
 module.exports = {
     avalon: avalon,

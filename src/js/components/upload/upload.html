@@ -1,0 +1,16 @@
+<div class="companyMessage-scimg clr">
+   <div class="d-i lt companyMessage-scimg-show">
+        <img ms-attr="{id:@imgID}" alt="">
+    </div>
+    <i class="d-i lt newADD-i1" ms-text="@title" ms-visible="@title!=''">
+    </i>
+    <i class="d-i lt newADD-i2" ms-html="@content" ms-visible="@content!=''">
+    </i>
+    <span class="d-i lt" style="width: 100%;margin:5px 0 -25px 20px;height: 0;" ms-text="@imgscon"  ms-visible="@imgscon!=''"></span>
+    <span class="d-i lt newADD-bu" style="width: 100%;height: 42px;margin-left: 0;">
+        <input type="button" value="上传图片" style="width: 20%" ms-on-click="@fileChange()">
+    </span>
+    <form style="display: none;" ms-attr="{id:@upId,action:@upUrl}"  method="post" enctype="multipart/form-data">
+        <input type="file" name="file" multiple=""  ms-on-change="@onSelectChange()">
+    </form>
+</div>

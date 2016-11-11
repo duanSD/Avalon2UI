@@ -1,3 +1,4 @@
+var avalon = require('../../seed/core')
 var root = avalon.root
 var camelize = avalon.camelize
 var cssHooks = avalon.cssHooks
@@ -45,6 +46,8 @@ avalon.fn.position = function () {
     if (!elem) {
         return parentOffset
     }
+    /* istanbul ignore if */
+    /* istanbul ignore else */
     if (this.css("position") === "fixed") {
         offset = elem.getBoundingClientRect()
     } else {
@@ -65,6 +68,7 @@ avalon.fn.position = function () {
         left: offset.left - parentOffset.left - avalon.css(elem, "marginLeft", true)
     }
 }
+
 avalon.fn.offsetParent = function () {
     var offsetParent = this[0].offsetParent
     while (offsetParent && avalon.css(offsetParent, "position") === "static") {
@@ -91,6 +95,7 @@ cssHooks["@:get"] = function (node, name) {
     }
     return ret
 }
+
 cssHooks["opacity:get"] = function (node) {
     var ret = cssHooks["@:get"](node, "opacity")
     return ret === "" ? "1" : ret
@@ -113,6 +118,7 @@ var rdisplayswap = /^(none|table(?!-c[ea]).+)/
 
 function showHidden(node, array) {
     //http://www.cnblogs.com/rubylouvre/archive/2012/10/27/2742529.html
+    /* istanbul ignore if*/
     if (node.offsetWidth <= 0) { //opera.offsetWidth可能小于0
         var styles = getComputedStyle(node, null)
         if (rdisplayswap.test(styles["display"])) {
@@ -173,6 +179,8 @@ avalon.each({
     }
     avalon.fn[method] = function (value) { //会忽视其display
         var node = this[0]
+        /* istanbul ignore if*/
+        /* istanbul ignore else*/
         if (arguments.length === 0) {
             if (node.setTimeout) { //取得窗口尺寸,IE9后可以用node.innerWidth /innerHeight代替
                 return node["inner" + name]

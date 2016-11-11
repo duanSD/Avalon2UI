@@ -16,7 +16,7 @@ var voidTag = avalon.oneObject('area,base,basefont,bgsound,br,col,command,embed,
         'frame,hr,img,input,keygen,link,meta,param,source,track,wbr')
 var plainTag = avalon.oneObject('script,style,textarea,xmp,noscript,option,template')
 var stringPool = {}
-
+require('./optimize')
 
 function lexer(str) {
     stringPool = {}
@@ -35,7 +35,7 @@ function lexer(str) {
             i = i === -1 ? str.length : i
             var nodeValue = str.slice(0, i).replace(rfill, fill)
             str = str.slice(i)//处理文本节点
-            node = {type: "#text", nodeType: 3, nodeValue: nodeValue}
+            node = {nodeName: "#text", nodeType: 3, nodeValue: nodeValue}
             if (rcontent.test(nodeValue)) {
                 collectNodes(node, stack, ret)//不收集空白节点
             }
@@ -49,7 +49,7 @@ function lexer(str) {
                 }
                 var nodeValue = str.slice(4, l).replace(rfill, fill)
                 str = str.slice(l + 3)
-                node = {type: "#comment", nodeType: 8, nodeValue: nodeValue}
+                node = {nodeName: "#comment", nodeType: 8, nodeValue: nodeValue}
                 collectNodes(node, stack, ret)
                 if (rmsForEnd.test(nodeValue)) {
                     var p = stack.last()
@@ -62,25 +62,26 @@ function lexer(str) {
         if (!node) {
             var match = str.match(ropenTag)
             if (match) {
-                var type = match[1].toLowerCase()
-                var isVoidTag = voidTag[type] || match[3] === '\/'
-                node = {type: type, nodeType: 1, props: {}, children: [], isVoidTag: isVoidTag}
+                var nodeName = match[1].toLowerCase()
+                var isVoidTag = voidTag[nodeName] || match[3] === '\/'
+                node = {nodeName: nodeName, nodeType: 1, props: {}, children: [], isVoidTag: isVoidTag}
                 var attrs = match[2]
                 if (attrs) {
                     collectProps(attrs, node.props)
                 }
+
                 collectNodes(node, stack, ret)
                 str = str.slice(match[0].length)
                 if (isVoidTag) {
                     node.fire = node.isVoidTag = true
                 } else {
                     stack.push(node)
-                    if (plainTag[type]) {
-                        var index = str.indexOf("</" + type + '>')
+                    if (plainTag[nodeName]) {
+                        var index = str.indexOf("</" + nodeName + '>')
                         var innerHTML = str.slice(0, index).trim()
                         str = str.slice(index)
                         if (innerHTML) {
-                            switch (type) {
+                            switch (nodeName) {
                                 case 'style':
                                 case 'script':
                                 case 'noscript':
@@ -90,7 +91,8 @@ function lexer(str) {
                                     if (innerHTML) {
                                         node.children.push({
                                             nodeType: 3,
-                                            type: '#text',
+                                            nodeName: '#text',
+                                            skipContent: true,
                                             nodeValue: nomalString(innerHTML)
                                         })
                                     }
@@ -103,7 +105,7 @@ function lexer(str) {
                                 case 'option':
                                     node.children.push({
                                         nodeType: 3,
-                                        type: '#text',
+                                        nodeName: '#text',
                                         nodeValue: nomalString(trimHTML(innerHTML))
                                     })
                                     break
@@ -116,12 +118,12 @@ function lexer(str) {
         if (!node) {
             var match = str.match(rendTag)
             if (match) {
-                var type = match[1].toLowerCase()
+                var nodeName = match[1].toLowerCase()
                 var last = stack.last()
                 if (!last) {
-                    avalon.error(match[0] + '前面缺少<' + type + '>')
-                } else if (last.type !== type) {
-                    avalon.error(last.type + '没有闭合')
+                    avalon.error(match[0] + '前面缺少<' + nodeName + '>')
+                } else if (last.nodeName !== nodeName) {
+                    avalon.error(last.nodeName + '没有闭合')
                 }
                 node = stack.pop()
                 node.fire = true
@@ -146,26 +148,30 @@ function lexer(str) {
 module.exports = lexer
 
 function fireEnd(node, stack, ret) {
-    var type = node.type
+    var nodeName = node.nodeName
     var props = node.props
-    switch (type) {
+    switch (nodeName) {
         case 'input':
             if (!props.type) {
                 props.type = 'text'
             }
             break
         case 'select':
-            props.type = type + '-' + props.hasOwnProperty('multiple') ? 'multiple' : 'one'
+            props.type = nodeName + '-' + props.hasOwnProperty('multiple') ? 'multiple' : 'one'
             break
         case 'table':
             addTbody(node.children)
             break
         default:
-            if (type.indexOf('ms-') === 0) {
-                props.is = type
+            if (nodeName.indexOf('ms-') === 0) {
+                props.is = nodeName
                 if (!props['ms-widget']) {
-                    props['ms-widget'] = '{is:' + avalon.quote(type) + '}'
+                    props['ms-widget'] = '{is:' + avalon.quote(nodeName) + '}'
                 }
+            }
+            if (props['ms-widget']) {
+                node.template = avalon.vdomAdaptor(node, 'toHTML')
+
             }
             break
     }
@@ -176,20 +182,13 @@ function fireEnd(node, stack, ret) {
         var arr = p ? p.children : ret
         arr.splice(arr.length - 1, 0, {
             nodeType: 8,
-            type: '#comment',
+            nodeName: '#comment',
             nodeValue: 'ms-for:' + forExpr
         })
 
-        var cb = props['data-for-rendered']
-        var cid = cb + ':cb'
-
-        if (cb && !avalon.caches[cid]) {
-            avalon.caches[cid] = Function('return ' + avalon.parseExpr(cb, 'on'))()
-        }
-
         markeRepeatRange(arr, {
             nodeType: 8,
-            type: '#comment',
+            nodeName: '#comment',
             nodeValue: 'ms-for-end:'
         })
     }
@@ -212,7 +211,18 @@ function markeRepeatRange(nodes, end) {
                     start.template = array.map(function (a) {
                         return avalon.vdomAdaptor(a, 'toHTML')
                     }).join('')
-                    nodes.push(start, array, end)
+                    var element = array[0]
+                    if (element.props) {
+                        var cb = element.props['data-for-rendered']
+                        if (cb) {
+                            var wid = cb + ':cb'
+                            if (!avalon.caches[wid]) {
+                                avalon.caches[wid] = Function('return ' + avalon.parseExpr(cb, 'on'))()
+                            }
+                            start.wid = wid
+                        }
+                    }
+                    nodes.push(start, [], end)
                     break
                 }
             }
@@ -244,6 +254,7 @@ function collectProps(attrs, props) {
             if (value.indexOf('??') === 0) {
                 value = nomalString(value).
                         replace(rlineSp, '').
+                        replace(/\"/g, "'").
                         slice(1, -1)
             }
         }
@@ -316,10 +327,10 @@ function addTbody(nodes) {
     for (var i = 0; i < n; i++) {
         var node = nodes[i]
         if (!tbody) {
-            if (node.type === 'tr') {
+            if (node.nodeName === 'tr') {
                 tbody = {
                     nodeType: 1,
-                    type: 'tbody',
+                    nodeName: 'tbody',
                     children: [],
                     props: {}
                 }
@@ -330,7 +341,7 @@ function addTbody(nodes) {
                 nodes[i] = tbody
             }
         } else {
-            if (node.type !== 'tr' && node.nodeType === 1) {
+            if (node.nodeName !== 'tr' && node.nodeType === 1) {
                 tbody = false
             } else {
                 tbody.children.push(node)
@@ -354,74 +365,3 @@ function addTbody(nodes) {
     }
 }
 
-avalon.speedUp = function (arr) {
-    for (var i = 0; i < arr.length; i++) {
-        hasDirective(arr[i])
-    }
-}
-
-function hasDirective(a) {
-    switch (a.nodeType) {
-        case 3:
-            if (avalon.config.rbind.test(a.nodeValue)) {
-                a.dynamic = 'expr'
-                return true
-            } else {
-                a.skipContent = true
-                return false
-            }
-        case 8:
-            if (a.dynamic) {
-                return true
-            } else {
-                a.skipContent = true
-                return false
-            }
-        case 1:
-            if (a.props['ms-skip']) {
-                a.skipAttrs = true
-                a.skipContent = true
-                return false
-            }
-            if (/^ms\-/.test(a.type) || hasDirectiveAttrs(a.props)) {
-                a.dynamic = true
-            } else {
-                a.skipAttrs = true
-            }
-            if (a.isVoidTag && !a.dynamic) {
-                a.skipContent = true
-                return false
-            }
-            var hasDirective = childrenHasDirective(a.children)
-            if (!hasDirective && !a.dynamic) {
-                a.skipContent = true
-                return false
-            }
-            return true
-        default:
-            if (Array.isArray(a)) {
-                return childrenHasDirective(a)
-            }
-    }
-}
-
-function childrenHasDirective(arr) {
-    var ret = false
-    for (var i = 0, el; el = arr[i++]; ) {
-        if (hasDirective(el)) {
-            ret = true
-        }
-    }
-    return ret
-}
-
-function hasDirectiveAttrs(props) {
-    if ('ms-skip' in props)
-        return false
-    for (var i in props) {
-        if (i.indexOf('ms-') === 0) {
-            return true
-        }
-    }
-    return false
-}

@@ -1,7 +1,7 @@
 /***
  * 地区JSON
  */
-
+define(function() {
 	var dataPro = {
 		110000:'北京',
 		120000:'天津',
@@ -4707,7 +4707,8 @@
     	areaStr += dataArea[arr[1]][arr[2]];
     	return areaStr;
     }   
-module.exports={
+	return {
 		AreaSelect: AreaSelect,
 		AreaGet: AreaGet
-};
+	};
+});

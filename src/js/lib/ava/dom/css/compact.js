@@ -1,11 +1,11 @@
+var avalon = require('../../seed/core')
 var root = avalon.root
-var window = avalon.window
 var camelize = avalon.camelize
 var cssHooks = avalon.cssHooks
 
 var prefixes = ['', '-webkit-', '-o-', '-moz-', '-ms-']
 var cssMap = {
-    'float': window.Range ? 'cssFloat' : 'styleFloat'
+    'float': avalon.modern ? 'cssFloat' : 'styleFloat'
 }
 avalon.cssNumber = avalon.oneObject('animationIterationCount,columnCount,order,flex,flexGrow,flexShrink,fillOpacity,fontWeight,lineHeight,opacity,orphans,widows,zIndex,zoom')
 
@@ -45,6 +45,8 @@ avalon.fn.position = function () {
     if (!elem) {
         return parentOffset
     }
+    /* istanbul ignore if */
+    /* istanbul ignore else */
     if (this.css('position') === 'fixed') {
         offset = elem.getBoundingClientRect()
     } else {
@@ -65,6 +67,7 @@ avalon.fn.position = function () {
         left: offset.left - parentOffset.left - avalon.css(elem, 'marginLeft', true)
     }
 }
+
 avalon.fn.offsetParent = function () {
     var offsetParent = this[0].offsetParent
     while (offsetParent && avalon.css(offsetParent, 'position') === 'static') {
@@ -81,8 +84,8 @@ cssHooks['@:set'] = function (node, name, value) {
     } catch (e) {
     }
 }
-
-if (window.getComputedStyle) {
+/* istanbul ignore else */
+if (typeof getComputedStyle === 'function') {
     cssHooks['@:get'] = function (node, name) {
         if (!node || !node.style) {
             throw new Error('getComputedStyle要求传入一个节点 ' + node)
@@ -104,7 +107,7 @@ if (window.getComputedStyle) {
     var rnumnonpx = /^-?(?:\d*\.)?\d+(?!px)[^\d\s]+$/i
     var rposition = /^(top|right|bottom|left)$/
     var ralpha = /alpha\([^)]*\)/i
-    var ie8 = !!window.XDomainRequest
+    var ie8 = avalon.msie === 8
     var salpha = 'DXImageTransform.Microsoft.Alpha'
     var border = {
         thin: ie8 ? '1px' : '2px',
@@ -181,6 +184,7 @@ var rdisplayswap = /^(none|table(?!-c[ea]).+)/
 
 function showHidden(node, array) {
     //http://www.cnblogs.com/rubylouvre/archive/2012/10/27/2742529.html
+    /* istanbul ignore if*/
     if (node.offsetWidth <= 0) { //opera.offsetWidth可能小于0
         if (rdisplayswap.test(cssHooks['@:get'](node, 'display'))) {
             var obj = {
@@ -198,6 +202,7 @@ function showHidden(node, array) {
         }
     }
 }
+
 avalon.each({
     Width: 'width',
     Height: 'height'

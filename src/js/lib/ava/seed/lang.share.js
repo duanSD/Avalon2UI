@@ -1,38 +1,56 @@
+var avalon = require('./core')
 var cssHooks = {}
 var rhyphen = /([a-z\d])([A-Z]+)/g
 var rcamelize = /[-_][^-_]/g
 var rhashcode = /\d\.\d{4}/
 var rescape = /[-.*+?^${}()|[\]\/\\]/g
+var Cache = require('./cache')
 
 var _slice = [].slice
 function defaultParse(cur, pre, binding) {
-       cur[binding.name] = avalon.parseExpr(binding)
+    cur[binding.name] = avalon.parseExpr(binding)
 }
+/* 
+ * 对html实体进行转义
+ * https://github.com/substack/node-ent
+ * http://www.cnblogs.com/xdp-gacl/p/3722642.html
+ * http://www.stefankrause.net/js-frameworks-benchmark2/webdriver-java/table.html
+ */
+
+var rentities = /&[a-z0-9#]{2,10};/
+var temp = avalon.avalonDiv
 avalon.shadowCopy(avalon, {
     caches: {}, //avalon2.0 新增
     vmodels: {},
     filters: {},
-    components: {},//放置组件的类
+    components: {}, //放置组件的类
     directives: {},
     eventHooks: {},
     eventListeners: {},
     validators: {},
     scopes: {},
+    evaluatorPool: new Cache(888),
+    _decode: function (str) {
+        if (rentities.test(str)) {
+            temp.innerHTML = str
+            return temp.innerText || temp.textContent
+        }
+        return str
+    },
     cssHooks: cssHooks,
     parsers: {
         number: function (a) {
-            return a === '' ? '' : /\d\.$/.test(a) ? a : parseFloat(a) || 0
+            return a === '' ? '' : parseFloat(a) || 0
         },
         string: function (a) {
             return a === null || a === void 0 ? '' : a + ''
         },
         boolean: function (a) {
-            if(a === '')
+            if (a === '')
                 return a
-            return a === 'true'|| a == '1'
+            return a === 'true' || a == '1'
         }
     },
-    version: "2.18",
     slice: function (nodes, start, end) {
         return _slice.call(nodes, start, end)
     },
@@ -41,11 +59,11 @@ avalon.shadowCopy(avalon, {
         if (node instanceof avalon) {
             node = node[0]
         }
-        if(node.nodeType !==1){
+        if (node.nodeType !== 1) {
             return
         }
         var prop = avalon.camelize(name)
-        name = avalon.cssName(prop) || prop
+        name = avalon.cssName(prop) || /* istanbul ignore next*/ prop
         if (value === void 0 || typeof value === 'boolean') { //获取样式
             fn = cssHooks[prop + ':get'] || cssHooks['@:get']
             if (name === 'background') {
@@ -67,7 +85,7 @@ avalon.shadowCopy(avalon, {
         }
     },
     directive: function (name, definition) {
-        definition.parse = definition.parse || defaultParse
+        definition.parse = definition.parse || /* istanbul ignore next*/ defaultParse
         return this.directives[name] = definition
     },
     isObject: function (a) {//1.6新增
@@ -114,7 +132,9 @@ avalon.shadowCopy(avalon, {
     },
     //生成UUID http://stackoverflow.com/questions/105034/how-to-create-a-guid-uuid-in-javascript
     makeHashCode: function (prefix) {
+        /* istanbul ignore next*/
         prefix = prefix || 'avalon'
+        /* istanbul ignore next*/
         return String(Math.random() + Math.random()).replace(rhashcode, prefix)
     },
     escapeRegExp: function (target) {
@@ -147,22 +167,17 @@ avalon.shadowCopy(avalon, {
     }
 })
 
-if(typeof performance !== 'undefined' && performance.now){
-    avalon.makeHashCode = function (prefix) {
-        prefix = prefix || 'avalon'
-        return (prefix + performance.now()).replace('.', '')
-    }
-}
-
 var UUID = 1
 module.exports = {
     //生成事件回调的UUID(用户通过ms-on指令)
     avalon: avalon,
     getLongID: function (fn) {
+        /* istanbul ignore next */
         return fn.uuid || (fn.uuid = avalon.makeHashCode('e'))
     },
     //生成事件回调的UUID(用户通过avalon.bind)
     getShortID: function (fn) {
+        /* istanbul ignore next */
         return fn.uuid || (fn.uuid = '_' + (++UUID))
     }
 }

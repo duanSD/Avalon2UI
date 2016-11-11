@@ -17,36 +17,57 @@ var rbinding = /^ms-(\w+)-?(.*)/
 function diff(copys, sources) {
     for (var i = 0; i < copys.length; i++) {
         var copy = copys[i]
-        var src = sources[i] || emptyObj()
-    
-        switch (copy.nodeType) {
-            case 3:
+        var src = sources[i] || copys[i]
+        switch (copy.nodeName) {
+            case '#text':
                 if (copy.dynamic) {
-                    directives.expr.diff(copy, src)
+                    var curValue = copy.nodeValue + ''
+                    if (curValue !== src.nodeValue) {
+                        src.nodeValue = curValue
+                        if (src.dom) {
+                            src.dom.nodeValue = curValue
+                        }
+                    }
                 }
                 break
-            case 8:
-                if (copy.dynamic === 'for') {
-                    directives['for'].diff(copy, src,
-                    copys[i+1],sources[i+1],sources[i+2]) 
-                }else if(src.afterChange){
-                    execHooks(src, src.afterChange)
+            case '#comment':
+                if (copy.forExpr) {//比较循环区域的元素位置
+                    directives['for'].diff(copy, src, copys, sources, i)
+                } else if (copy.afterChange) {
+                    execHooks(src, copy.afterChange)
                 }
                 break
-            case 1:
-                if (copy.order) {
+            case void(0):
+                diff(copy, src)//比较循环区域的内容
+                break
+            case '#document-fragment':
+                diff(copy.children, src.children)//比较循环区域的内容
+                break
+            default:
+                if (copy.dynamic) {
+                    var index = i
+                    if (copy['ms-widget']) {
+                        avalon.directives['widget'].diff(copy, src, 'ms-widget', copys, sources, index)
+                        copy = copys[i]
+                        src = sources[i] || emptyObj()
+                        delete copy['ms-widget']
+                    }
+
+                    if ('ms-if' in copy) {
+                        avalon.directives['if'].diff(copy, src, 'ms-if', copys, sources, index)
+                        copy = copys[i]
+                        src = sources[i] || emptyObj()
+                        delete copy['ms-if']
+                    }
                     diffProps(copy, src)
                 }
-                if (copy.nodeType === 1 && !copy.skipContent && !copy.isVoidTag ) {
-                    diff(copy.children, src.children || emptyArr, copy)
+
+                if (/^\w/.test(copy.nodeName) && !copy.skipContent && !copy.isVoidTag) {
+                    diff(copy.children, src.children || [])
                 }
-                if(src.afterChange){
+
+                if (src.afterChange) {
                     execHooks(src, src.afterChange)
-                }
-                break
-            default: 
-                if(Array.isArray(copy)){
-                   diff(copy, src)
                 }
                 break
         }
@@ -55,40 +76,27 @@ function diff(copys, sources) {
 
 function execHooks(el, hooks) {
     if (hooks.length) {
-        for (var hook, i = 0; hook = hooks[i++];) {
-           hook(el.dom, el)
+        for (var hook, i = 0; hook = hooks[i++]; ) {
+            hook(el.dom, el)
         }
     }
     delete el.afterChange
 }
 
-function diffProps(copys, sources) {
-    var order = copys.order
-    if (order) {
-        var directiveType
-        try {
-           order.replace(avalon.rword, function (name) {
-                var match = name.match(rbinding)
-                var type = match && match[1]
-                directiveType = type
-                if (directives[type]) {
-                    directives[type].diff(copys, sources || emptyObj(), name)
-                }
-                if(copys.order !== order){
-                    throw 'break'
-                }
-            })
-            
-        } catch (e) {
-            if(e !== 'break'){
-                avalon.warn(directiveType, e, e.stack || e.message, 'diffProps error')
-            }else{
-                diffProps(copys, sources)
+function diffProps(copy, source) {
+    var directives = avalon.directives
+    try {
+        for (var name in copy) {
+            var match = name.match(rbinding)
+            var type = match && match[1]
+            if (directives[type]) {
+                directives[type].diff(copy, source, name)
             }
         }
+
+    } catch (e) {
+        avalon.warn(type, e, e.stack || e.message, 'diffProps error')
     }
-
-
 }
-avalon.diffProps = diffProps
+avalon.diff = diff
 module.exports = diff

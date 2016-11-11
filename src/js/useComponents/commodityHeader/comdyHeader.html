@@ -1,0 +1,10 @@
+<div class="section_top_nav clr">
+    <span ms-class="{section_top_active:@selectNav==1}" ms-click="@navClick(1)">出售中</span>
+    <span ms-class="{section_top_active:@selectNav==2}" ms-click="@navClick(2)">仓库中</span>
+    <span ms-class="{section_top_active:@selectNav==3}" ms-click="@navClick(3)">已售罄</span>
+    <span ms-class="{section_top_active:@selectNav==4}" ms-click="@navClick(4)">回收站</span>
+    <div class="section_top_nav_in" ms-if="@role==1"  ms-click="@navClick(5)">
+        <span>+</span>
+        <span>添加商品</span>
+    </div>
+</div>

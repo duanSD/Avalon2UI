@@ -1,15 +1,9 @@
 
 function VElement(type, props, children) {
-    if (typeof type === 'object') {
-        for (var i in type) {
-            this[i] = type[i]
-        }
-    } else {
-        this.nodeType = 1
-        this.type = type
-        this.props = props
-        this.children = children
-    }
+    this.nodeName = type
+    this.props = props
+    this.children = children
+
 }
 function skipFalseAndFunction(a) {
     return a !== false && (Object(a) !== a)
@@ -24,18 +18,23 @@ var svgTags = avalon.oneObject('circle,defs,ellipse,image,line,' +
 
 
 var rvml = /^\w+\:\w+/
-var supportTemplate = 'content' in document.createElement('template')
+if (avalon.browser) {
+    var supportTemplate = 'content' in document.createElement('template')
+}
 VElement.prototype = {
     constructor: VElement,
     toDOM: function () {
-        var dom, tagName = this.type
+        if (this.dom)
+            return this.dom
+        var dom, tagName = this.nodeName
         if (avalon.modern && svgTags[tagName]) {
             dom = createSVG(tagName)
         } else {
             dom = document.createElement(tagName)
         }
-        var wid = this.props['ms-important'] ||
-                this.props['ms-controller'] || this.wid
+        var props = this.props || {}
+        var wid = props['ms-important'] ||
+                props['ms-controller'] || this.wid
         if (wid) {
             var scope = avalon.scopes[wid]
             var element = scope && scope.vmodel && scope.vmodel.$element
@@ -47,15 +46,15 @@ VElement.prototype = {
                 return element
             }
         }
-        for (var i in this.props) {
-            var val = this.props[i]
+        for (var i in props) {
+            var val = props[i]
             if (skipFalseAndFunction(val)) {
                 dom.setAttribute(i, val + '')
             }
         }
         var c = this.children || []
         var template = c[0] ? c[0].nodeValue : ''
-        switch (this.type) {
+        switch (this.nodeName) {
             case 'xmp':
             case 'script':
             case 'style':
@@ -72,33 +71,34 @@ VElement.prototype = {
             default:
                 if (!this.isVoidTag) {
                     this.children.forEach(function (c) {
-                        c && dom.appendChild(avalon.vdomAdaptor(c, 'toDOM'))
+                        c && dom.appendChild(avalon.vdom(c, 'toDOM'))
                     })
                 }
                 break
         }
-        return dom
+        return this.dom = dom
     },
     toHTML: function () {
         var arr = []
-        for (var i in this.props) {
-            var val = this.props[i]
+        var props = this.props || {}
+        for (var i in props) {
+            var val = props[i]
             if (skipFalseAndFunction(val)) {
-                arr.push(i + '=' + avalon.quote(this.props[i] + ''))
+                arr.push(i + '=' + avalon.quote(props[i] + ''))
             }
         }
         arr = arr.length ? ' ' + arr.join(' ') : ''
-        var str = '<' + this.type + arr
+        var str = '<' + this.nodeName + arr
         if (this.isVoidTag) {
             return str + '/>'
         }
         str += '>'
-        if (this.children.length) {
+        if (this.children) {
             str += this.children.map(function (c) {
-                return c ? avalon.vdomAdaptor(c, 'toHTML') : ''
+                return c ? avalon.vdom(c, 'toHTML') : ''
             }).join('')
         }
-        return str + '</' + this.type + '>'
+        return str + '</' + this.nodeName + '>'
     }
 }
 

@@ -1,0 +1,26 @@
+<div class="dl-inner-tab">
+    <div class="bui-nav-tab arrow-left-active arrow-right-active"  style="height: 850px;" >
+        <div class="tab-nav-bar"><s class="tab-nav-arrow arrow-left" ms-click="@leftMove"></s>
+            <div class="tab-nav-wrapper">
+                <div class="tab-nav-inner">
+                    <ul class="tab-nav-list" style="left: 0px;" ms-css="{width:@tabWidth*(@tabList.length+1)+'px'}">
+                        <li class="bui-nav-tab-item" ms-for="el in @tabList"
+                            ms-visible="el.status"
+                            ms-attr="{title:el.title}"
+                            ms-class="[(el.status==1)&&'tab-nav-actived']"
+                            ms-css="{width:@tabWidth+'px'}" ms-click="@clickNav(el)|stop" >
+                            <s class="l"></s>
+                            <div class="tab-item-inner"><span class="tab-item-title" ms-text="el.title"></span><s
+                                    class="tab-item-close" ms-visible="@tabList.length>1" ms-click="@closeTab(el)|stop" ></s></div>
+                            <s class="r"></s>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <s class="tab-nav-arrow arrow-right"  ms-click="@rightMove"></s>
+        </div>
+        <div class="tab-content-container" ms-css="{height:@containerHeight+'px'}">
+                <iframe  ms-for="el in @tabList"  ms-visible="el.status==1" ms-attr="{id:el.url,src:el.url}" width="100%" height="100%" frameborder="0"></iframe>
+        </div>
+    </div>
+</div>

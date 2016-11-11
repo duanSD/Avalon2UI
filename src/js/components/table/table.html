@@ -1,0 +1,32 @@
+<div class="table-responsive">
+    <table class="table table-bordered table-hover table-striped">
+        <thead>
+        <tr>
+            <th  ms-for="el in @columns">
+                <span ms-if="!el.checkbox" ms-text="el.title"></span>
+                <span ms-if="el.checkbox">
+                    <input type="checkbox" id="checkboxAll">
+                    <label for="checkboxAll" ms-text="el.title"></label>
+                </span>
+            </th>
+        </tr>
+        </thead>
+        <tbody class="table-striped">
+        <tr ms-for="els in @tbody">
+            <td  ms-for="el in @columns">
+                <span ms-if="!el.checkbox&&!el.action" ms-text="els[el.field]"></span>
+                <span ms-if="el.checkbox&&!el.action">
+                    <input type="checkbox" ms-attr="{id:els[el.field]}">&nbsp;
+                    <label ms-attr="{for:els[el.field]}" ms-text="els[el.field]"></label>
+                </span>
+                <span ms-if="el.action">
+                    <a style="margin-right: 5px;" ms-if="e.typeVal==els[e.type]" ms-for="e in el.action" ms-text="e.name"  ms-class="e.class"
+                       ms-attr="{href:e.url||'javascript:;'}"
+                        ms-click="e.click($event,els)"></a>
+                </span>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+        <xmp  ms-if="@pagesId" :widget="[{is:'ms-pages',id:@pagesId},@tbpgConf]"></xmp>
+</div>

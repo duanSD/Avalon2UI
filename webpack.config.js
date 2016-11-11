@@ -16,12 +16,15 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
  */
 var HtmlWebpackPlugin = require('html-webpack-plugin');
 
+var TransferWebpackPlugin = require('transfer-webpack-plugin');
+var CopyWebpackPlugin = require('copy-webpack-plugin');
+
 //提公用js
 var CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
 var UglifyJsPlugin = webpack.optimize.UglifyJsPlugin;
 
-const debug = process.env.NODE_ENV !== 'production';
+const debug =true;// process.env.NODE_ENV !== 'production';
 
 var entries = getEntry('src/js/model/**/*.js', 'src/js/model/');
 var chunks = Object.keys(entries);
@@ -35,8 +38,8 @@ var config={
     entry:entries,
     output: {
         path: path.join(__dirname, 'dist'), //输出目录的配置，模板、样式、脚本、图片等资源的路径配置都相对于它
-        publicPath: '/dist/',               //模板、样式、脚本、图片等资源对应的server上的路径
-        filename: 'js/[name].js',           //每个页面对应的主js的生成配置
+        publicPath: '/',               //模板、样式、脚本、图片等资源对应的server上的路径
+        filename: 'js/model/[name].js',           //每个页面对应的主js的生成配置
         chunkFilename: 'js/[id].chunk.js?[chunkhash]'   //chunk生成的配置
     },
 
@@ -46,7 +49,7 @@ var config={
             {
                 test: /\.css$/,
                 //配置css的抽取器、加载器。'-loader'可以省去
-                loader: ExtractTextPlugin.extract('style-loader', 'css-loader')
+                loader: ExtractTextPlugin.extract({ fallbackLoader: 'style-loader', loader: 'css-loader' })
             }, {
                 test: /\.less$/,
                 //配置less的抽取器、加载器。中间!有必要解释一下，
@@ -62,12 +65,12 @@ var config={
             }, {
                 //文件加载器，处理文件静态资源
                 test: /\.(woff|woff2|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
-                loader: 'file-loader?name=./fonts/[name].[ext]'
+                loader: 'file-loader?limit=50000&name=./fonts/[name].[ext]'
             }, {
                 //图片加载器，雷同file-loader，更适合图片，可以将较小的图片转成base64，减少http请求
                 //如下配置，将小于8192byte的图片转成base64码
                 test: /\.(png|jpg|gif)$/,
-                loader: 'url-loader?limit=8192&name=./images/[hash].[ext]'
+                loader: 'url-loader?limit=50000&name=./images/[hash].[ext]'
             },
            { test: /\.scss$/, loader: 'style!css!sass?sourceMap'},
            {test: /\.(tpl|ejs)$/, loader: 'ejs'}
@@ -75,11 +78,18 @@ var config={
     },
     //插件
     plugins: [
+      /* new webpack.DllReferencePlugin({
+            context: __dirname,
+            manifest: require('./manifest.json'),
+        }),*/
         //使用ProvidePlugin加载使用频率高的模块 这里正常指加载node_modules里的模块。
         new webpack.ProvidePlugin({ //加载jq
           // avalon:'avalon2',
             //avalon:'avalon'
-           $: 'jquery-compat'
+            $: "jquery-compat",
+            jQuery: "jquery-compat",
+            "window.$": "jquery-compat",
+            "window.jQuery": "jquery-compat"
         }),
 
         //提公用js到common.js文件中
@@ -93,7 +103,7 @@ var config={
         new CommonsChunkPlugin({
             name: 'vendors', // 将公共模块提取，生成名为`vendors`的chunk
             chunks: chunks,
-            minChunks: chunks.length // 提取所有entry共同依赖的模块
+            minChunks: 7//chunks.length //20// // 提取所有entry共同依赖的模块
         }),
 
         //将样式统一发布到.css文件中
@@ -124,15 +134,30 @@ var config={
             },
             except: ['$super', '$', 'exports', 'require','avalon'] //排除关键字
         }),
-
-
-       new webpack.HotModuleReplacementPlugin() //热加载
+        /*new TransferWebpackPlugin([
+         { from: 'src/index.html', to: 'index.html' },
+         { from: 'src/images/emoji', to: 'images/emoji' },
+         { from: 'src/js/lib/plugins/My97DatePicker', to: 'js/lib/plugins/My97DatePicker' }
+         ,{ from: 'src/js/lib/plugins/ueditor', to: 'js/lib/plugins/ueditor' }
+         ])*/
+        new CopyWebpackPlugin([
+            { from: 'src/index.html', to: 'index.html' }
+        ])
+      //,new webpack.HotModuleReplacementPlugin() //热加载
+      /*  new CopyWebpackPlugin([
+            { from: 'dist', to: '../../../web/wxzb/www/backend'}
+        ],{copyUnmodified: true,force:true})*/
     ],
     //其它解决方案配置
     resolve: {
-        extensions: ['', '.js', '.json', '.less','.scss', '.ejs', '.png', '.jpg'],
+       // modulesDirectories: ['node_modules', './src'],
+        extensions: [ '.js', '.json', '.less','.scss','.css', '.ejs', '.png', '.jpg'],
         alias: {
-            main:'../lib/avalon/main',//avalon主体功能完整代码
+            'main':'../lib/avalon/main',//avalon主体功能完整代码
+            '_/main':'../../lib/avalon/main',//avalon主体功能完整代码
+            'jquery':'jquery-compat',// 方便子目录的js引入,model层不需要引入jquery 会自动识别
+            'Clipboard':'../components/clipboard/clipboard_ie8',
+           '_/Clipboard':'../../components/clipboard/clipboard_ie8',
             //avalon_test:'../../lib/avalon/avalon',
             //avalon:'../lib/ava/avalon',//纯avalon
             mmPromise:'../lib/avalon/mmPromise',
@@ -141,7 +166,54 @@ var config={
             mmAnimate:'../lib/avalon/mmAnimate',
             mmRouter:'../lib/avalon/mmRouter',
             mmState:'../lib/avalon/mmState',
-            //filter: path.join(__dirname, 'src/filters')
+            'wx': '../lib/weixin/1.0.0/jweixin',
+            'jqXdr': '../lib/jquery/jQuery.XDomainRequest',
+            'RSA': '../components/rsa/RSA',
+            'md5': '../components/md5/md5',
+            'cookie': '../lib/plugins/cookie/jquery.cookie',
+            // 'zclip': 'plugins/zclip/jquery.zclip',
+            'validate': '../lib/plugins/validate/jquery.validate',
+            '_/validate': '../../lib/plugins/validate/jquery.validate.min',
+            'uploadify': '../lib/plugins/uploadify/jquery.uploadify.min',
+            'jquery.validator': '../../lib/plugins/jquery.validator/jquery.validator',
+            'validator': '../../lib/plugins/jquery.validator/zh-CN',
+            //echarts
+   /*         'echarts': '../lib/plugins/echarts/echarts',
+            '_/echarts': '../../lib/plugins/echarts/echarts',
+            'echarts/chart/bar': '../lib/plugins/echarts/chart/bar',
+            '_/echarts/chart/bar': '../../lib/plugins/echarts/chart/bar',
+            'echarts/chart/line': '../lib/plugins/echarts/chart/line',
+            '_/echarts/chart/line': '../../lib/plugins/echarts/chart/line',*/
+            //echarts end
+            //units
+            'comConfig': '../lib/units/comConfig',
+            '_/comConfig': '../../lib/units/comConfig',
+            'vdate': '../lib/units/vdate',//校验
+            '_/vdate': '../../lib/units/vdate',//校验
+            'getUser': '../lib/units/getUser',//获取用户信息
+            'singLogin': '../lib/units/singLogin',//单点登录
+            'area': '../lib/units/area',//地区数据
+            '_/area': '../../lib/units/area',//地区数据
+            'PickupColor': '../lib/units/PickupColor',//拾取颜色
+            '_/PickupColor': '../../lib/units/PickupColor',//拾取颜色
+            'store':'../lib/units/store',//本地存储store对象
+            '_/store':'../../lib/units/store',//本地存储store对象
+            //units end
+            //jquery-ui
+            'datepicker': '../lib/plugins/jquery-ui/ui/datepicker',
+            'datepicker-zh-CN': '../lib/plugins/jquery-ui/ui/i18n/datepicker-zh-CN',
+            '_/datepicker': '../../lib/plugins/jquery-ui/ui/datepicker',
+            '_/datepicker-zh-CN': '../../lib/plugins/jquery-ui/ui/i18n/datepicker-zh-CN',
+            'core': '../lib/plugins/jquery-ui/ui/core',
+            //jquery-ui-end
+            //
+            //fileupload
+            'jquery.ui.widget': '../lib/plugins/jquery.fileupload/jquery.ui.widget',
+            'jquery.iframe-transport': '../lib/plugins/jquery.fileupload/jquery.iframe-transport',
+            'fileupload': '../lib/plugins/jquery.fileupload/jquery.fileupload'
+            ,'_/fileupload': '../../lib/plugins/jquery.fileupload/jquery.fileupload'
+
+
         }
     }
     //使用webpack-dev-server，提高开发效率
@@ -156,7 +228,7 @@ var config={
 
 var pages = Object.keys(getEntry('src/view/**/*.html', 'src/view/'));
 pages.forEach(function(pathname){
-    console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDpathname0:'+pathname);
+   // console.log('DDDDDDDDDDDDDDDDDDDDDDDDDDDDpathname0:'+pathname);
     var conf={
         filename: './view/' + pathname + '.html', //生成的html存放路径，相对于path
         template: './src/view/' + pathname + '.html', //html模板路径 相对的路径
@@ -213,8 +285,8 @@ function getEntry(globPath, pathDir) {
         entries[pathname] = ['./' + entry];
 
     }
-    for(n in entries){
+   /* for(n in entries){
         console.log('DDDDDDD-'+n+':'+entries[n]);
-    }
+    }*/
     return entries;
 }

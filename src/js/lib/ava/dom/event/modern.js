@@ -1,3 +1,4 @@
+var avalon = require('../../seed/core')
 var document = avalon.document
 var window = avalon.window
 var root = avalon.root
@@ -20,6 +21,10 @@ avalon.bind = function (elem, type, fn) {
                 fn = hook.fix(elem, fn)
                 fn.uuid = uuid
             }
+        }
+        //fix 移动端浏览器:click不触发的BUG
+        if(type === 'click' && avalon.modern && document.ontouchstart){
+            elem.addEventListener('click',avalon.noop)
         }
         var key = type + ':' + uuid
         avalon.eventListeners[fn.uuid] = fn
@@ -101,6 +106,8 @@ function collectHandlers(elem, type, handlers) {
 }
 
 var rhandleHasVm = /^e/
+var stopImmediate = false
+
 function dispatch(event) {
     event = new avEvent(event)
     var type = event.type
@@ -111,8 +118,11 @@ function dispatch(event) {
     while ((handler = handlers[i++]) && !event.cancelBubble) {
         var host = event.currentTarget = handler.elem
         j = 0
-        while ((uuid = handler.uuids[ j++ ]) &&
-                !event.isImmediatePropagationStopped) {
+        while ((uuid = handler.uuids[ j++ ])) {
+            if (stopImmediate) {
+                stopImmediate = false
+                break
+            }
             var fn = avalon.eventListeners[uuid]
             if (fn) {
                 var vm = rhandleHasVm.test(uuid) ? handler.elem._ms_context_ : 0
@@ -165,28 +175,25 @@ function avEvent(event) {
 }
 avEvent.prototype = {
     preventDefault: function () {
-        var e = this.originalEvent
+        var e = this.originalEvent || {}
         this.returnValue = false
-        if (e) {
-            e.returnValue = false
+        if (e.preventDefault) {
             e.preventDefault()
         }
     },
     stopPropagation: function () {
-        var e = this.originalEvent
+        var e = this.originalEvent || {}
         this.cancelBubble = true
-        if (e) {
-            e.cancelBubble = true
+        if (e.stopPropagation) {
             e.stopPropagation()
         }
     },
     stopImmediatePropagation: function () {
-        var e = this.originalEvent
-        this.isImmediatePropagationStopped = true
-        if (e.stopImmediatePropagation) {
-            e.stopImmediatePropagation()
-        }
+        stopImmediate = true
         this.stopPropagation()
+    },
+    toString: function () {
+        return '[object Event]'//#1619
     }
 }
 
@@ -197,8 +204,9 @@ avalon.fireDom = function (elem, type, opts) {
     elem.dispatchEvent(hackEvent)
 }
 
-var eventHooks = avalon.eventHooks
+
 //针对firefox, chrome修正mouseenter, mouseleave(chrome30+)
+/* istanbul ignore if */
 if (!('onmouseenter' in root)) {
     avalon.each({
         mouseenter: 'mouseover',
@@ -230,7 +238,7 @@ avalon.each({
         }
     }
 })
-
+/* istanbul ignore if */
 if (document.onmousewheel === void 0) {
     /* IE6-11 chrome mousewheel wheelDetla 下 -120 上 120
      firefox DOMMouseScroll detail 下3 上-3

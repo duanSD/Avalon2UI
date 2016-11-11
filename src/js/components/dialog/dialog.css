@@ -1,0 +1,142 @@
+/***************  zzc   ************************/
+.system-tip-zzc {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background: #666;
+  opacity: 0.4;
+  filter: progid:DXImageTransform.Microsoft.Alpha(opacity=40);
+  z-index: 3;
+}
+.system-tip-zzc_body{
+  display: inline-block;
+  width: 500px;
+  min-height: 250px;
+  border-radius: 4px;
+  background: #fff;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+  z-index: 4;
+}
+.system-tip-zzc_body_close{
+  display:block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  background-image: url("./close1.png");
+  cursor: pointer;
+  right:15px;
+    top:15px;
+  line-height: 25px;
+}
+.system-tip-zzc_body_close:hover{
+  background-image: url("./close2.png");
+}
+.headTitle{
+    position: absolute;
+    left:25px;
+    top:15px;
+    height: 30px;
+    line-height: 30px;
+    font-size: 18px;
+}
+
+.dialogBody{
+  padding: 20px;
+  display: block;
+    margin-top:30px;
+}
+
+/***************************** 【body_btn】 ***********************************/
+.body_btn{
+  width: 100%;
+  height: 70px;
+  float: left;
+  background:#f8f7f7;
+  margin:0;
+  text-align: center;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+}
+.body_btn_button{
+  width: 100px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 18px;
+  margin: 15px auto;
+  cursor: pointer;
+}
+.body_btn_button_1{
+  border: 1px solid #d23138;
+  border-radius:2px;
+  color: #fff;
+  background:#d23138;
+}
+.body_btn_button_2{
+  border: 1px solid #ccc;
+  border-radius:2px;
+  background: #fff;
+}
+.body_btn_button_2:hover{
+  border: 1px solid #d23138;
+  color: #d23138;
+}
+
+.body_btn_one{
+  width: 100%;
+  height: 70px;
+  float: left;
+  background:#fff;
+  margin:0;
+  text-align: center;
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+}
+.myselfButton{
+  width: 100px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
+  font-size: 18px;
+  margin: 15px auto;
+  cursor: pointer;
+  border: 1px solid #d23138;
+  border-radius:2px;
+  color: #fff;
+  background:#d23138
+}
+
+.titleStyle{display: block;text-align: center;}
+.title_ok{}
+.title_msg{}
+.title_err{}
+.iconImg{
+  width: 70px;
+  height: 70px;
+  display: block;
+  margin: 10px auto;
+}
+.title_ok .iconImg{
+  background-image: url("./Ok.png");
+}
+.title_msg .iconImg{
+  background-image: url("./msg_icon.png");
+}
+.title_err .iconImg{
+  background-image: url("err_icon.png");
+}
+
+.title_con{
+   font-weight: bold;
+  font-size:18px;
+}

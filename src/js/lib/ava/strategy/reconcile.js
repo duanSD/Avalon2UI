@@ -31,8 +31,12 @@ function reconcile(nodes, vnodes, parent) {
             break
         }
         var vtype = el && getType(el)
-        var v = newNodes.length
+        var v = newNodes.length, check
         if (map[v] === vtype) {
+            if (check && el.nodeType === 1 && (el.getAttribute(':for')||el.getAttribute('ms-for'))) {
+                check = false
+                continue
+            }
             newNodes.push(el)
             var vnode = vnodes[v]
 
@@ -40,7 +44,7 @@ function reconcile(nodes, vnodes, parent) {
                 vnode.dom = el
             }
 
-            if (el.nodeType === 1 && !vnode.isVoidTag && !plainTag[vnode.type]) {
+            if (el.nodeType === 1 && !vnode.isVoidTag && !plainTag[vnode.nodeName]) {
                 if (el.type === 'select-one') {
                     //在chrome与firefox下删掉select中的空白节点，会影响到selectedIndex
                     var fixIndex = el.selectedIndex
@@ -57,6 +61,9 @@ function reconcile(nodes, vnodes, parent) {
                 var nn = document.createComment(vv.nodeValue)
                 vv.dom = nn
                 newNodes.push(nn)
+                if (vv.forExpr) {
+                    check = true
+                }
                 i = Math.max(0, --i)
             }
         }
@@ -82,9 +89,9 @@ module.exports = reconcile
 function getType(node) {
     switch (node.nodeType) {
         case 3:
-            return '3' + rwhiteRetain.test(node.nodeValue) 
+            return '3' + rwhiteRetain.test(node.nodeValue)
         case 1:
-            return '1' + (node.nodeName || node.type).toLowerCase()
+            return '1' + node.nodeName.toLowerCase()
         case 8:
             return '8' + rforHolder.test(node.nodeValue)
     }

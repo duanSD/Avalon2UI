@@ -15,7 +15,9 @@ Avalon2 UI
 
 1.npm install
 
-2.node server
+2.node serverdev /  npm start 
+
+
 
 ----------------------------------
 初步目录说明：
@@ -91,6 +93,7 @@ package.json里最终的声明依赖如下：
 文档和组件会跟着进度一步步添加。
 
 
+
 现在可用的组件列表：
 -----------------
 store  本地存储
@@ -110,3 +113,37 @@ page 项目中的分页组件。暂时只实现了单页使用一个组件的功
 browser 客户端检测
 
 Cookie  cookie功能组件
+
+
+2016.11.11 update
+-----------------
+
+0. 修改了webpack的一些问题。调整了一avalon的版本，与依赖处理方式。目录结构有少许变动（更完美）
+
+1.工程结构框架更加完善,对插件框架兼容性更高
+
+2.添加以开发用的环境。基于webpack-dev-server 代理配置在 proxyConfig中添加
+
+3.添加了部分avalon2组件和项目中使用的基于avalon新版的组件：
+
+		avalon2通用组件： 
+		
+					store  本地存储 兼容所有浏览器
+					
+					datepicker  日期控组件
+					
+					clipboard 复制
+					
+					dialog 模态框组件/弹出层
+					
+					pages 修改问分BUG
+					
+					table 表格组件。基本可用可扩展后续会完善更多功能
+					
+					uploader 图片上传组件 支持单张。多图。可动态控制数量 基于表单提交方式上传
+					
+					
+					
+					
+					
+					

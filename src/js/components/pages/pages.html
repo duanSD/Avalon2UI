@@ -1,0 +1,16 @@
+<nav>
+    <ul class="pagination pages">
+        <li  ms-on-click="@update('prev')"  ms-visible="@prevView" ><a href="javascript:;">&laquo;</a></li>
+        <li ms-click="@onNumClick($index)" ms-for="($index,el) in @pageList"   ms-class="{active:$index==@selectNums}">
+            <a href="javascript:;" ms-text="el"></a>
+        </li>
+        <li  ms-click="@update('next')"  ms-visible="@nextView"><a href="javascript:;">&raquo;</a></li>
+    </ul>
+    <span class="page-all">共{{@totalNum}}页</span>
+    <span class="page-go">
+            到
+            <input type="text" ms-duplex-number="@inputValue" class="form-control" value="" />
+            页
+            <span class="btn btn-info" ms-click="@ongo">GO</span>
+        </span>
+</nav>

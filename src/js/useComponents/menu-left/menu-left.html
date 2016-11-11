@@ -1,0 +1,19 @@
+    <div class="dl-second-nav" style="height: 850px;">
+        <div class="dl-second-tree" id="J_menuTree">
+            <ul class="bui-side-menu bui-menu" aria-disabled="false" style="height: 850px;">
+
+                <li class="bui-menu-item menu-second" ms-for="el in @navList"
+                    ms-class="{'bui-menu-item-collapsed':!el.toggle}">
+                    <div class="bui-menu-title" ms-click="@listSHFun(el)"><s></s><span class="bui-menu-title-text" ms-text="el.title"></span></div>
+                    <ul class="bui-menu" ms-for="els in el.list">
+                        <li class="bui-menu-item menu-leaf" ms-class="{'bui-menu-item-selected':els.type}" ms-click="@clickNav(els,el.list)">
+                            <a href="javascript:;"><em ms-text="els.title"></em></a>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        <div class="dl-second-slib-con">
+            <div class="dl-second-slib"></div>
+        </div>
+    </div>
