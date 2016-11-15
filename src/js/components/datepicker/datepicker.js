@@ -12,7 +12,7 @@ avalon.component('ms-datepicker', {
     defaults: {
         class:''
         ,width:''
-        ,height:''
+        ,height:'34px'
         ,thisId:config.uuid()
         ,dateValue:new Date()-0 //初始时间
         ,dateFormatVal:''//输入框中的时间

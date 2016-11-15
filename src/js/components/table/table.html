@@ -1,4 +1,19 @@
 <div class="table-responsive">
+    <div class="row toolBox" ms-if="@boolBox">
+        <div class="col-lg-3 col-md-4 col-sm-5 col-xs-12">
+            <xmp :widget="[{is:'ms-search',id:@searchId},@tbSearch]"></xmp>
+        </div>
+        <div class="col-lg-4 col-md-5 col-sm-6 col-xs-12">
+            <div class="input-group">
+                <xmp :widget="[{is:'ms-datepicker',id:@dateStartId},@dateSConf]"></xmp>
+                <span class="input-group-addon">到</span>
+                <xmp :widget="[{is:'ms-datepicker',id:@dateEndId},@dateEConf]"></xmp>
+            </div>
+        </div>
+        <div class="col-lg-1 col-md-1 col-sm-1 col-xs-12">
+            <button type="button" class="btn btn-default" ms-click="@tbSearchFun"><span class="glyphicon glyphicon-search"></span>查询</button>
+        </div>
+    </div>
     <table class="table table-bordered table-hover table-striped">
         <thead>
         <tr>
@@ -14,12 +29,15 @@
         <tbody class="table-striped">
         <tr ms-for="els in @tbody">
             <td  ms-for="el in @columns">
-                <span ms-if="!el.checkbox&&!el.action" ms-text="els[el.field]"></span>
-                <span ms-if="el.checkbox&&!el.action">
-                    <input type="checkbox" ms-attr="{id:els[el.field]}">&nbsp;
+                <span ms-if="!el.checkbox&&!el.action&&!el.link" ms-text="els[el.field]"></span>
+                <span ms-if="!el.checkbox&&!el.action&&el.link" ms-click="el.link($event,els)">
+                    <a href="javascript:;"> <span class="badge"  ms-text="els[el.field]"></span>{{el['units']}}</a>
+                </span>
+                <span ms-if="el.checkbox&&!el.action&&!el.link">
+                    <input type="checkbox" ms-attr="{id:els[el.field]}">
                     <label ms-attr="{for:els[el.field]}" ms-text="els[el.field]"></label>
                 </span>
-                <span ms-if="el.action">
+                <span ms-if="el.action&&!el.link">
                     <a style="margin-right: 5px;" ms-if="e.typeVal==els[e.type]" ms-for="e in el.action" ms-text="e.name"  ms-class="e.class"
                        ms-attr="{href:e.url||'javascript:;'}"
                         ms-click="e.click($event,els)"></a>

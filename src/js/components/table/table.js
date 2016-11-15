@@ -1,10 +1,13 @@
 require('../pages/pages');
+require('../search/search');
+require('../datepicker/datepicker')
 require('./table.less');
 var conf=require('_/comConfig');
 var tpl=require('./table.html')
 var vm=avalon.component('ms-table', {
     template: tpl,
     defaults: {
+
         ifpages:true //是否显示分页。默认显示
         ,ifgetData:true //是否配置组件自动加载数据。还是传递数据对旬。默认为前者
         ,columns: [/*{
@@ -51,20 +54,78 @@ var vm=avalon.component('ms-table', {
         }
         ,tbody:[]
         ,dataUrl:''
-        ,onInit:function(){
-            var vm=this;
-            if(this.ifpages){
-                this.pagesId=conf.uuid();
-                this.tbpgConf={//分页配置
-                    totalNum:10
-                    ,selectPage:vm.selectPage
-                    ,numlen:vm.numlen
-                    ,pageLen:vm.pageLen
-                    ,onPageChange:vm.onPageChange
+
+        //工具条控制
+        ,boolBox:false //是否显示工具条
+        ,toolTit:'搜索'
+        ,tbSearch:{
+            title:'搜索'
+            ,searchVal:''
+        }
+        ,dateSConf:{
+            dateFormatVal:''
+            ,objconf:{ //组件内部使用对象，要组件配置中不能改变些对象的值
+                elem:'',
+                format: 'YYYY-MM-DD', //日期格式 YYYY-MM-DD hh:mm:ss  'YYYY年MM月DD日'等
+                /*min: laydate.now(), //设定最小日期为当前日期
+                 max: '2099-06-16', //最大日期*/
+                istime: false, //是否显示时间
+                festival: true, //显示节日
+                istoday: false,
+                choose: function(datas){ //选择日期后的回调
+                    /* end.min = datas; //开始日选好后，重置结束日的最小日期
+                     end.start = datas //将结束日的初始值设定为开始日*/
                 }
             }
+        }
+        ,dateEConf:{
+            dateFormatVal:''
+            ,objconf:{ //组件内部使用对象，要组件配置中不能改变些对象的值
+                elem:'',
+                format: 'YYYY-MM-DD', //日期格式 YYYY-MM-DD hh:mm:ss  'YYYY年MM月DD日'等
+                /*min: laydate.now(), //设定最小日期为当前日期
+                 max: '2099-06-16', //最大日期*/
+                istime: false, //是否显示时间
+                festival: true, //显示节日
+                istoday: false,
+                choose: function(datas){ //选择日期后的回调
+                    /* end.min = datas; //开始日选好后，重置结束日的最小日期
+                     end.start = datas //将结束日的初始值设定为开始日*/
+                }
+            }
+        }
+        ,$cacheUrl:''
+        ,tbSearchFun:function(){
 
+            this.dataUrl=this.$cacheUrl+'&name='+this.tbSearch.searchVal+'&startDate='+this.dateSConf.dateFormatVal+'&startEnd='+this.dateEConf.dateFormatVal
+            this.getData();
+        }
 
+        ,onInit:function(){
+            var vm=this;
+            this.$cacheUrl=this.dataUrl;
+            if(this.ifpages) {
+                this.pagesId = conf.uuid();
+
+                this.dateEndId = conf.uuid();
+                this.tbpgConf = {//分页配置
+                    totalNum: 10
+                    , selectPage: vm.selectPage
+                    , numlen: vm.numlen
+                    , pageLen: vm.pageLen
+                    , onPageChange: vm.onPageChange
+                };
+            }
+            if(this.boolBox) {
+                this.searchId = conf.uuid();
+                this.dateStartId = conf.uuid();
+                this.tbSearch = {
+                    title: vm.toolTit
+                    , searchVal: ''
+                }
+                this.dateSConf.objconf.max = this.dateEConf.dateFormatVal;
+                this.dateEConf.objconf.min = this.dateSConf.dateFormatVal;
+            }
             this.getData();
         }
         ,onReady:function(){
@@ -78,6 +139,7 @@ var vm=avalon.component('ms-table', {
         ,getData:function(n){
             //n为当前选中的页码
             var vm=this;
+            var tbpgConf=vm.tbpgConf
             if(this.ifgetData){
                 avalon.ajax({
                     type: "GET",
@@ -90,7 +152,7 @@ var vm=avalon.component('ms-table', {
                     success: function(d){
                         if(d.status==1){
                             vm.tbody=d.data;
-                            vm.tbpgConf.totalNum=d.pageSum;
+                            !!tbpgConf?tbpgConf.totalNum=d.pageSum:vm.totalNum=d.pageSum;
                         }
                         console.log(d);
                     }

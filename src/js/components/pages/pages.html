@@ -13,4 +13,7 @@
             页
             <span class="btn btn-info" ms-click="@ongo">GO</span>
         </span>
+    <ul class="pagination pages-num pull-right">
+        <li ms-for="el in @page_num" ms-click="@page_numFun(el)"> <a href="javascript:;" ms-text="el"></a></li>
+    </ul>
 </nav>

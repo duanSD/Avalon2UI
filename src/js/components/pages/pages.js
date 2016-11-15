@@ -16,7 +16,12 @@ var tpl=require('./pages.html')
          selectNums:0,
          // clickCallback:avalon.noop,
          onPageChange:avalon.noop,//go按键的回调函数 参数为事件对象与页码 选中页码发生改变时要做的处理
-
+         //每页显示多少条的属性
+         page_num:[10,20,30,50,100],
+         page_numFun:function(el){
+             this.pageLen=el;
+             this.onPageChange(this.selectPage);
+         },
          /*-----------------------------------------------------------建议线以上组件外部修改属性*/
          //selectNum:0,//当前第几个按钮
          onInit: function () {

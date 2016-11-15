@@ -144,6 +144,16 @@ Cookie  cookie功能组件
 					
 					
 					
+2016.11.15 update
+-----------------
+
+0.添加了table(表格)组件的搜索与日期筛选工个
+
+1.pages 分页组件添加了每页显示条数功能
+
+2.添加了 avalon2的multiselect下拉多选组件。并且带有列表搜索功能
+
+<img src='https://github.com/duanSD/Avalon2UI/blob/master/src/images/multiselect.png' width='439' height='195'  />
 					
 					
 					

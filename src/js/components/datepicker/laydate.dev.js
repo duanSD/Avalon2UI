@@ -16,7 +16,7 @@ var config =  {
 
 /*引入*/
 require('./need/laydate.css');
-require('./skins/dahong/laydate.css');
+require('./skins/yahui/laydate.css');
 
 var Dates = {}, doc = document, creat = 'createElement', byid = 'getElementById', tags = 'getElementsByTagName';
 var as = ['laydate_box', 'laydate_void', 'laydate_click', 'LayDateSkin', 'skins/', '/laydate.css'];
