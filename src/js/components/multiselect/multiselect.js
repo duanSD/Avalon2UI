@@ -4,8 +4,18 @@ var tmpl = require('./multiselect.html')
 avalon.component('ms-multiselect', {
     template: tmpl,
     defaults: {
-        list_data:[ //配置的数据格式
+        cache_data:[  //配置的数据格式
             {
+                key:'HTC'
+                ,val:'HTC'
+            },{
+                key:'Oculas'
+                ,val:'Oculas'
+            }
+        ]
+        //操作运算的对象
+        ,list_data:[
+            /*{
                 key:'HTC'
                 ,val:'HTC'
                 ,selected:true
@@ -16,10 +26,11 @@ avalon.component('ms-multiselect', {
                 ,val:'Oculas'
                 ,selected:false
                 ,show:1
-            }
+            }*/
         ]
-        //缓存最新状态的数据列表
-        ,cache_data:[]
+
+        //缓存最新选中的数据列表 输出使用
+        ,selected_data:[]
 
         /*控制显示隐藏下拦框*/
         ,isShowDown:false
@@ -33,7 +44,9 @@ avalon.component('ms-multiselect', {
         //选中取消元素方法
         ,selectItem:function(el){
             el.selected=!el.selected;
-            this.isShowDown=false;
+            //this.isShowDown=false;
+            //计算选中的个数
+            this.selectedFun()
         }
         //关掉去除一个选中元素
         ,closeItem:function(el){
@@ -50,6 +63,8 @@ avalon.component('ms-multiselect', {
                     }
                 })
                 this.list_data.reverse()
+                //计算选中的个数
+                this.selectedFun()
             }
         }
 
@@ -81,8 +96,31 @@ avalon.component('ms-multiselect', {
                 el.show=re.test(el.val)?1:0
             })
         }
+        //计算选中的个数
+        ,selectedFun:function(){
+            avalon.each(this.list_data,function(i,el){
+                this.selected_data=[]
+                el.selected&&this.selected_data.push({
+                    key:el.key
+                    ,val:el.val
+                })
+            })
+        }
         ,onInit:function(){
-            this.cache_data=this.list_data.$model;
+            //初始化操作对象
+            var vm=this;
+            avalon.each(this.cache_data,function(i,el){
+                el&&vm.list_data.push({
+                    key:el.key
+                    ,val:el.val
+                    ,selected:false
+                    ,show:1
+                })
+            });
+           avalon(document.body).bind('click',function(e){
+               !avalon.contains(vm.$element, this)&&(vm.isShowDown=false);
+            })
+
         }
     }
 });
