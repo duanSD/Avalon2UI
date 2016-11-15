@@ -4,22 +4,14 @@ var tmpl = require('./multiselect.html')
 avalon.component('ms-multiselect', {
     template: tmpl,
     defaults: {
-        cache_data:[  //配置的数据格式
-            {
-                key:'HTC'
-                ,val:'HTC'
-            },{
-                key:'Oculas'
-                ,val:'Oculas'
-            }
-        ]
+        //配置的数据格式
         //操作运算的对象
-        ,list_data:[
+        list_data:[
             /*{
                 key:'HTC'
                 ,val:'HTC'
-                ,selected:true
-                ,show:1
+                ,selected:true //是否选中
+                ,show:1 //是否显示在列表
             }
             ,{
                 key:'Oculas'
@@ -28,9 +20,12 @@ avalon.component('ms-multiselect', {
                 ,show:1
             }*/
         ]
+        //当选择组件发生变化时的回调 参数为最新的选择数据的数组
+        ,dataCallback:avalon.noop
 
         //缓存最新选中的数据列表 输出使用
-        ,selected_data:[]
+       /* ,selected_data:[]*/
+
 
         /*控制显示隐藏下拦框*/
         ,isShowDown:false
@@ -44,13 +39,14 @@ avalon.component('ms-multiselect', {
         //选中取消元素方法
         ,selectItem:function(el){
             el.selected=!el.selected;
-            //this.isShowDown=false;
             //计算选中的个数
             this.selectedFun()
         }
         //关掉去除一个选中元素
         ,closeItem:function(el){
             el.selected=false;
+            //计算选中的个数
+            this.selectedFun()
         }
         //点击回退键时去除选中的元素
         ,keyupDel:function(e){
@@ -68,14 +64,14 @@ avalon.component('ms-multiselect', {
             }
         }
 
-        //选中的元素从list_data中的selected中过滤
+  /*      //选中的元素从list_data中的selected中过滤
         ,selectedFilter:function(el){
             return el.selected;
         }
         //是否显示过虑
         ,showFilter:function(el){
             return el.show==1;
-        }
+        }*/
 
 
         /*搜索列表相关的功能*/
@@ -98,29 +94,21 @@ avalon.component('ms-multiselect', {
         }
         //计算选中的个数
         ,selectedFun:function(){
+            var selected_data=[]
             avalon.each(this.list_data,function(i,el){
-                this.selected_data=[]
-                el.selected&&this.selected_data.push({
+                el.selected&&selected_data.push({
                     key:el.key
                     ,val:el.val
                 })
             })
+            this.dataCallback(selected_data);
         }
         ,onInit:function(){
             //初始化操作对象
             var vm=this;
-            avalon.each(this.cache_data,function(i,el){
-                el&&vm.list_data.push({
-                    key:el.key
-                    ,val:el.val
-                    ,selected:false
-                    ,show:1
-                })
-            });
            avalon(document.body).bind('click',function(e){
                !avalon.contains(vm.$element, this)&&(vm.isShowDown=false);
-            })
-
+            });
         }
     }
 });

@@ -1,10 +1,7 @@
 <div class="ava_multiselect">
-<!--    <select name="" class="hide">
-    <option label="HTC" value="HTC">HTC</option>
-    </select>-->
     <label class="selector-input">
         <ul class="selector-values">
-            <li  ms-for="el in @list_data|filterBy(@selectedFilter)">
+            <li  ms-for="el in @list_data" ms-visible="el.selected">
                 <div class="btn-group">
                     <span type="button" class="btn btn-info" ms-text="el.val"></span>
                     <span type="button" class="btn btn-info">
@@ -19,12 +16,12 @@
     <ul class="dropdown-menu" ms-visible="@isShowDown">
         <li class="searchList">
             <div class="has-feedback">
-                <input type="text" class="form-control"  placeholder="请输入搜索字段"  ms-duplex="@tagInput" data-duplex-changed="@tagInputCall">
+                <input type="text" class="form-control"  placeholder="请输入搜索字段" ms-duplex="@tagInput" data-duplex-changed="@tagInputCall">
                 <span class="glyphicon glyphicon-search form-control-feedback"></span>
             </div>
         </li>
         <li class="divider"></li>
-        <li ms-for="el in @list_data|filterBy(@showFilter)">
+        <li ms-for="el in @list_data" ms-visible="el.show==1">
             <a href="javascript:;" ms-click="@selectItem(el)">
                 <span ms-visible="el.selected" class="glyphicon glyphicon-ok"></span>&nbsp;
                 <span ms-text="el.val"></span>
